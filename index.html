@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Priyanshu Classes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f6f9;
+      text-align: center;
+    }
+
+    header {
+      background: #1e3a8a;
+      color: white;
+      padding: 20px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    input {
+      padding: 10px;
+      width: 80%;
+      max-width: 300px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      background: #2563eb;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .subjects {
+      display: none;
+      margin-top: 30px;
+    }
+
+    .subject-btn {
+      display: block;
+      margin: 10px auto;
+      width: 220px;
+      padding: 12px;
+      background: #0f172a;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .subject-btn:hover {
+      background: #1e293b;
+    }
+
+    .videos {
+      display: none;
+      margin-top: 20px;
+    }
+
+    /* Responsive video */
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .logout {
+      margin-top: 20px;
+      background: #dc2626;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding: 15px;
+      background: #1e3a8a;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Priyanshu Classes</h1>
+  <p>SSC CGL Preparation with Concept Clarity</p>
+</header>
+
+<div class="container">
+
+  <h2 id="accessHeading">Enter Access Code</h2>
+
+  <input type="text" id="codeInput" placeholder="Enter Access Code">
+  <br>
+  <button class="btn" id="unlockBtn" onclick="checkCode()">Unlock</button>
+
+  <div class="subjects" id="subjects">
+    <h2>Select Subject</h2>
+
+    <div class="subject-btn" onclick="showVideos('math')">Maths</div>
+    <div class="subject-btn" onclick="showVideos('english')">English</div>
+    <div class="subject-btn" onclick="showVideos('reasoning')">Reasoning</div>
+    <div class="subject-btn" onclick="showVideos('current')">Current Affairs</div>
+
+    <button class="btn logout" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- MATHS -->
+  <div class="videos" id="math">
+    <h3>Maths Classes</h3>
+    <div class="video-wrapper">
+      <iframe 
+        src="https://www.youtube.com/embed/iqP3rZ9gr1Q?rel=0&modestbranding=1"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <!-- ENGLISH -->
+  <div class="videos" id="english">
+    <h3>English Classes</h3>
+    <div class="video-wrapper">
+      <iframe 
+        src="https://www.youtube.com/embed/eJuc_5pmWkw?rel=0&modestbranding=1"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Priyanshu Classes | All Rights Reserved
+</footer>
+
+<script>
+
+window.onload = function() {
+  if(localStorage.getItem("accessGranted") === "true") {
+    unlockAccess(false);
+  }
+};
+
+function checkCode() {
+  var code = document.getElementById("codeInput").value;
+
+  if(code === "Priyanshu is great") {
+    localStorage.setItem("accessGranted", "true");
+    unlockAccess(true);
+  } else {
+    alert("Wrong Code!");
+  }
+}
+
+function unlockAccess(showAlert) {
+  document.getElementById("accessHeading").style.display = "none";
+  document.getElementById("codeInput").style.display = "none";
+  document.getElementById("unlockBtn").style.display = "none";
+
+  document.getElementById("subjects").style.display = "block";
+}
+
+function showVideos(subjectId) {
+  var allVideos = document.getElementsByClassName("videos");
+  for(var i = 0; i < allVideos.length; i++) {
+    allVideos[i].style.display = "none";
+  }
+  document.getElementById(subjectId).style.display = "block";
+}
+
+function logout() {
+  localStorage.removeItem("accessGranted");
+  location.reload();
+}
+
+</script>
+
+</body>
+</html>
