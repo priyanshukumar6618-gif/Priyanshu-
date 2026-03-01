@@ -1,70 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Priyanshu Classes</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { font-family: Arial; margin:0; background:#f1f5f9; }
-    header { background:#1e3a8a; color:white; padding:15px; text-align:center; }
-    .container { padding:20px; text-align:center; }
-    input, select { padding:10px; margin:8px; width:90%; max-width:300px; }
-    button { padding:10px 20px; margin:8px; background:#2563eb; color:white; border:none; border-radius:6px; cursor:pointer; }
-    .logout { background:red; }
-    .card { background:white; padding:15px; margin:15px auto; max-width:500px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
-    iframe { width:100%; height:350px; margin-top:10px; border-radius:8px; }
-    .hidden { display:none; }
-  </style>
+<title>Priyanshu Classes Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body { margin:0; font-family:Segoe UI; background:#f1f5f9; }
+header { background:#0f172a; color:white; padding:15px; text-align:center; }
+.container { display:flex; height:100vh; }
+.sidebar {
+  width:220px;
+  background:#1e293b;
+  color:white;
+  padding:15px;
+}
+.sidebar button {
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  background:#334155;
+  border:none;
+  color:white;
+  cursor:pointer;
+  border-radius:6px;
+}
+.sidebar button:hover { background:#475569; }
+
+.main {
+  flex:1;
+  padding:20px;
+  overflow:auto;
+}
+
+.card {
+  background:white;
+  padding:15px;
+  margin:15px 0;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+iframe {
+  width:100%;
+  height:300px;
+  border-radius:8px;
+  margin-top:10px;
+}
+
+input, select {
+  padding:10px;
+  margin:8px 0;
+  width:100%;
+  max-width:400px;
+}
+
+button.primary {
+  background:#2563eb;
+  color:white;
+  padding:10px 15px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.hidden { display:none; }
+.logout { background:red !important; }
+.delete { background:#dc2626; color:white; padding:6px 10px; border:none; border-radius:6px; cursor:pointer; }
+</style>
 </head>
 
 <body>
 
 <header>
-  <h2>Priyanshu Classes</h2>
+<h2>Priyanshu Classes</h2>
 </header>
 
-<div class="container">
+<div id="authSection" style="text-align:center;padding:40px;">
+<h3>Login</h3>
+<input type="email" id="loginEmail" placeholder="Email"><br>
+<input type="password" id="loginPassword" placeholder="Password"><br>
+<button class="primary" onclick="login()">Login</button>
+<p>Don't have account?</p>
+<button onclick="showSignup()">Sign Up</button>
+</div>
 
-  <!-- AUTH -->
-  <div id="authSection">
-    <h3>Sign Up</h3>
-    <input type="email" id="email" placeholder="Email"><br>
-    <input type="password" id="password" placeholder="Password"><br>
-    <button onclick="signUp()">Create Account</button>
+<div id="signupSection" class="hidden" style="text-align:center;padding:40px;">
+<h3>Create Account</h3>
+<input type="email" id="signupEmail" placeholder="Email"><br>
+<input type="password" id="signupPassword" placeholder="Password"><br>
+<button class="primary" onclick="signUp()">Create Account</button>
+<button onclick="showLogin()">Back</button>
+</div>
 
-    <h3>Login</h3>
-    <input type="email" id="loginEmail" placeholder="Email"><br>
-    <input type="password" id="loginPassword" placeholder="Password"><br>
-    <button onclick="login()">Login</button>
-  </div>
+<div id="dashboard" class="container hidden">
 
-  <!-- ADMIN -->
-  <div id="adminPanel" class="hidden">
-    <h3>Admin Panel</h3>
+<div class="sidebar" id="sidebar"></div>
 
-    <select id="contentType">
-      <option value="pdf">PDF</option>
-      <option value="video">YouTube Video</option>
-    </select><br>
-
-    <input type="text" id="title" placeholder="Title"><br>
-    <input type="text" id="link" placeholder="Google Drive / YouTube Link"><br>
-
-    <select id="accessType">
-      <option value="free">Free</option>
-      <option value="paid">Paid</option>
-    </select><br>
-
-    <button onclick="addContent()">Add Content</button>
-    <button class="logout" onclick="logout()">Logout</button>
-    <hr>
-  </div>
-
-  <!-- STUDENT -->
-  <div id="studentPanel" class="hidden">
-    <h3 id="welcomeText"></h3>
-    <div id="contentList"></div>
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
+<div class="main">
+<h3 id="pageTitle">Dashboard</h3>
+<div id="mainContent"></div>
+</div>
 
 </div>
 
@@ -73,112 +108,144 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut }
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs }
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc }
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB8IW_3JhAhGuVvFwBUoqFKwEFEFZhDr6A",
-  authDomain: "priyanshu-24f9b.firebaseapp.com",
-  projectId: "priyanshu-24f9b",
-  storageBucket: "priyanshu-24f9b.firebasestorage.app",
-  messagingSenderId: "656305585506",
-  appId: "1:656305585506:web:e75d7a29e9add61e67803b",
-  measurementId: "G-PQPWFR9FHY"
-};
+const firebaseConfig = { /* YOUR CONFIG HERE */ };
+const ADMIN_EMAIL="priyanshukumar6618@gmail.com";
 
-const ADMIN_EMAIL = "priyanshukumar6618@gmail.com";
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+window.showSignup=()=>{ authSection.classList.add("hidden"); signupSection.classList.remove("hidden"); }
+window.showLogin=()=>{ signupSection.classList.add("hidden"); authSection.classList.remove("hidden"); }
 
-window.signUp = async function(){
-  const email=document.getElementById("email").value;
-  const password=document.getElementById("password").value;
-  await createUserWithEmailAndPassword(auth,email,password);
-  alert("Account created!");
+window.signUp=async()=>{
+await createUserWithEmailAndPassword(auth,signupEmail.value,signupPassword.value);
+alert("Account Created!");
+showLogin();
 }
 
-window.login = async function(){
-  const email=document.getElementById("loginEmail").value;
-  const password=document.getElementById("loginPassword").value;
-  await signInWithEmailAndPassword(auth,email,password);
+window.login=async()=>{
+await signInWithEmailAndPassword(auth,loginEmail.value,loginPassword.value);
 }
 
-window.logout = function(){
-  signOut(auth);
-}
-
-window.addContent = async function(){
-  const type=document.getElementById("contentType").value;
-  const title=document.getElementById("title").value;
-  const link=document.getElementById("link").value;
-  const access=document.getElementById("accessType").value;
-
-  await addDoc(collection(db,"content"),{
-    type:type,
-    title:title,
-    link:link,
-    access:access
-  });
-
-  alert("Content Added!");
-}
+window.logout=()=>signOut(auth);
 
 function extractYouTubeID(url){
-  const regExp = /(?:youtube\.com.*(?:\?|&)v=|youtu\.be\/)([^&#]+)/;
-  const match = url.match(regExp);
-  return match ? match[1] : null;
+const regExp=/(?:youtube\.com.*(?:\?|&)v=|youtu\.be\/)([^&#]+)/;
+const match=url.match(regExp);
+return match?match[1]:null;
 }
 
-async function loadContent(){
-  const snapshot=await getDocs(collection(db,"content"));
-  const container=document.getElementById("contentList");
-  container.innerHTML="";
+function loadSidebar(user){
+sidebar.innerHTML="";
 
-  snapshot.forEach(doc=>{
-    const data=doc.data();
-    const div=document.createElement("div");
-    div.className="card";
+if(user.email===ADMIN_EMAIL){
+sidebar.innerHTML+=`<button onclick="showAdmin()">Admin Panel</button>`;
+}else{
+["English","Maths","Reasoning","GK/GS"].forEach(sub=>{
+sidebar.innerHTML+=`<button onclick="loadSubject('${sub}')">${sub}</button>`;
+});
+}
 
-    if(data.access==="paid"){
-      div.innerHTML=`<h4>${data.title} 🔒 (Paid)</h4>
-      <button onclick="alert('Payment system coming soon')">Unlock</button>`;
-    }else{
-      if(data.type==="pdf"){
-        const previewLink=data.link.replace('/view','/preview');
-        div.innerHTML=`<h4>${data.title}</h4>
-        <iframe src="${previewLink}"></iframe>`;
-      }else{
-        const videoID=extractYouTubeID(data.link);
-        div.innerHTML=`<h4>${data.title}</h4>
-        <iframe src="https://www.youtube.com/embed/${videoID}" allowfullscreen></iframe>`;
-      }
-    }
+sidebar.innerHTML+=`<button class="logout" onclick="logout()">Logout</button>`;
+}
 
-    container.appendChild(div);
-  });
+window.showAdmin=()=>{
+pageTitle.innerText="Admin Panel";
+mainContent.innerHTML=`
+<h4>Add Content</h4>
+<select id="subject">
+<option>English</option>
+<option>Maths</option>
+<option>Reasoning</option>
+<option>GK/GS</option>
+</select>
+<select id="type">
+<option value="video">Video</option>
+<option value="pdf">PDF</option>
+</select>
+<input type="text" id="title" placeholder="Title">
+<input type="text" id="link" placeholder="YouTube or Drive Link">
+<button class="primary" onclick="addContent()">Add</button>
+<hr>
+<h4>All Content</h4>
+<div id="adminContent"></div>
+`;
+
+loadAdminContent();
+}
+
+window.addContent=async()=>{
+await addDoc(collection(db,"content"),{
+subject:subject.value,
+type:type.value,
+title:title.value,
+link:link.value
+});
+alert("Content Added");
+showAdmin();
+}
+
+async function loadAdminContent(){
+const snap=await getDocs(collection(db,"content"));
+adminContent.innerHTML="";
+snap.forEach(d=>{
+const data=d.data();
+adminContent.innerHTML+=`
+<div class="card">
+<b>${data.subject}</b> - ${data.title}
+<button class="delete" onclick="deleteContent('${d.id}')">Delete</button>
+</div>
+`;
+});
+}
+
+window.deleteContent=async(id)=>{
+await deleteDoc(doc(db,"content",id));
+showAdmin();
+}
+
+window.loadSubject=async(sub)=>{
+pageTitle.innerText=sub;
+mainContent.innerHTML="Loading...";
+const snap=await getDocs(collection(db,"content"));
+mainContent.innerHTML="";
+snap.forEach(d=>{
+const data=d.data();
+if(data.subject===sub){
+let contentHTML="";
+if(data.type==="video"){
+const vid=extractYouTubeID(data.link);
+contentHTML=`<iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe>`;
+}else{
+const preview=data.link.replace('/view','/preview');
+contentHTML=`<iframe src="${preview}"></iframe>`;
+}
+mainContent.innerHTML+=`
+<div class="card">
+<h4>${data.title}</h4>
+${contentHTML}
+</div>
+`;
+}
+});
 }
 
 onAuthStateChanged(auth,(user)=>{
-  if(user){
-    document.getElementById("authSection").classList.add("hidden");
-
-    if(user.email===ADMIN_EMAIL){
-      document.getElementById("adminPanel").classList.remove("hidden");
-    }else{
-      document.getElementById("studentPanel").classList.remove("hidden");
-      document.getElementById("welcomeText").innerText="Welcome "+user.email;
-      loadContent();
-    }
-  }else{
-    document.getElementById("authSection").classList.remove("hidden");
-    document.getElementById("adminPanel").classList.add("hidden");
-    document.getElementById("studentPanel").classList.add("hidden");
-  }
+if(user){
+authSection.classList.add("hidden");
+signupSection.classList.add("hidden");
+dashboard.classList.remove("hidden");
+loadSidebar(user);
+}else{
+dashboard.classList.add("hidden");
+authSection.classList.remove("hidden");
+}
 });
 
 </script>
-
 </body>
 </html>
