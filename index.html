@@ -90,61 +90,51 @@ window.showSignup = function() {
   document.getElementById("signupPanel").style.display="block";
 }
 
-window.signUp = function() {
-  const name=document.getElementById("name").value;
-  const email=document.getElementById("email").value;
-  const password=document.getElementById("password").value;
+window.signUp = async function() {
+  try {
+    const name=document.getElementById("name").value;
+    const email=document.getElementById("email").value;
+    const password=document.getElementById("password").value;
 
-  createUserWithEmailAndPassword(auth,email,password)
-  .then((userCredential)=>{
-    return updateProfile(userCredential.user,{displayName:name});
-  })
-  .then(()=>{
-    sendEmailVerification(auth.currentUser);
+    const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+    await updateProfile(userCredential.user,{displayName:name});
+    await sendEmailVerification(userCredential.user);
+
     alert("Account created! Please verify your email.");
-  })
-  .catch(error=>alert(error.message));
+  } catch(error){
+    alert(error.message);
+  }
 }
 
-window.login = function() {
-  const email=document.getElementById("loginEmail").value;
-  const password=document.getElementById("loginPassword").value;
+window.login = async function() {
+  try {
+    const email=document.getElementById("loginEmail").value;
+    const password=document.getElementById("loginPassword").value;
 
-  signInWithEmailAndPassword(auth,email,password)
-  .catch(error=>alert(error.message));
+    await signInWithEmailAndPassword(auth,email,password);
+  } catch(error){
+    alert(error.message);
+  }
 }
 
 window.logout = function() {
   signOut(auth);
 }
 
-window.resendVerification=function(){
+window.resendVerification = function(){
   sendEmailVerification(auth.currentUser);
   alert("Verification email sent again!");
 }
 
-  onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, async (user) => {
   if(user){
-    await user.reload();   // 🔥 Force refresh user data
+    await user.reload();
 
     if(user.emailVerified){
       hideAll();
       document.getElementById("subjectPanel").style.display="block";
       document.getElementById("welcomeText").innerText =
         "Welcome, " + user.displayName + " 👋";
-    } else {
-      hideAll();
-      document.getElementById("verifyPanel").style.display="block";
-    }
-  } else {
-    hideAll();
-    document.getElementById("signupPanel").style.display="block";
-  }
-});
-      hideAll();
-      document.getElementById("subjectPanel").style.display="block";
-      document.getElementById("welcomeText").innerText=
-      "Welcome, "+user.displayName+" 👋";
     } else {
       hideAll();
       document.getElementById("verifyPanel").style.display="block";
