@@ -123,9 +123,24 @@ window.resendVerification=function(){
   alert("Verification email sent again!");
 }
 
-onAuthStateChanged(auth,user=>{
+  onAuthStateChanged(auth, async (user) => {
   if(user){
+    await user.reload();   // 🔥 Force refresh user data
+
     if(user.emailVerified){
+      hideAll();
+      document.getElementById("subjectPanel").style.display="block";
+      document.getElementById("welcomeText").innerText =
+        "Welcome, " + user.displayName + " 👋";
+    } else {
+      hideAll();
+      document.getElementById("verifyPanel").style.display="block";
+    }
+  } else {
+    hideAll();
+    document.getElementById("signupPanel").style.display="block";
+  }
+});
       hideAll();
       document.getElementById("subjectPanel").style.display="block";
       document.getElementById("welcomeText").innerText=
