@@ -5,98 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f4f6f9;
-      text-align: center;
-    }
-
-    header {
-      background: #1e3a8a;
-      color: white;
-      padding: 20px;
-    }
-
-    .container {
-      padding: 20px;
-    }
-
-    input {
-      padding: 10px;
-      width: 80%;
-      max-width: 300px;
-      margin-top: 10px;
-    }
-
-    .btn {
-      background: #2563eb;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .btn:hover {
-      background: #1d4ed8;
-    }
-
-    .subjects {
-      display: none;
-      margin-top: 30px;
-    }
-
-    .subject-btn {
-      display: block;
-      margin: 10px auto;
-      width: 220px;
-      padding: 12px;
-      background: #0f172a;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .subject-btn:hover {
-      background: #1e293b;
-    }
-
-    .videos {
-      display: none;
-      margin-top: 20px;
-    }
-
-    /* Responsive video */
-    .video-wrapper {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    .video-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .logout {
-      margin-top: 20px;
-      background: #dc2626;
-    }
-
-    footer {
-      margin-top: 40px;
-      padding: 15px;
-      background: #1e3a8a;
-      color: white;
-    }
+    body { font-family: Arial; margin:0; background:#f4f6f9; text-align:center; }
+    header { background:#1e3a8a; color:white; padding:20px; }
+    input { padding:10px; width:80%; max-width:300px; margin:10px; }
+    .btn { padding:10px 20px; background:#2563eb; color:white; border:none; border-radius:5px; cursor:pointer; }
+    .subjects, .admin-panel { display:none; margin-top:30px; }
+    .logout { background:red; margin-top:20px; }
+    table { margin:auto; border-collapse:collapse; margin-top:20px; }
+    table, th, td { border:1px solid #ccc; padding:10px; }
   </style>
 </head>
 
@@ -104,98 +20,130 @@
 
 <header>
   <h1>Priyanshu Classes</h1>
-  <p>SSC CGL Preparation with Concept Clarity</p>
 </header>
 
-<div class="container">
+<div id="authBox">
+  <h2>Sign Up</h2>
+  <input type="text" id="name" placeholder="Full Name"><br>
+  <input type="email" id="email" placeholder="Email"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <button class="btn" onclick="signUp()">Create Account</button>
 
-  <h2 id="accessHeading">Enter Access Code</h2>
+  <hr>
 
-  <input type="text" id="codeInput" placeholder="Enter Access Code">
-  <br>
-  <button class="btn" id="unlockBtn" onclick="checkCode()">Unlock</button>
-
-  <div class="subjects" id="subjects">
-    <h2>Select Subject</h2>
-
-    <div class="subject-btn" onclick="showVideos('math')">Maths</div>
-    <div class="subject-btn" onclick="showVideos('english')">English</div>
-    <div class="subject-btn" onclick="showVideos('reasoning')">Reasoning</div>
-    <div class="subject-btn" onclick="showVideos('current')">Current Affairs</div>
-
-    <button class="btn logout" onclick="logout()">Logout</button>
-  </div>
-
-  <!-- MATHS -->
-  <div class="videos" id="math">
-    <h3>Maths Classes</h3>
-    <div class="video-wrapper">
-      <iframe 
-        src="https://www.youtube.com"
-        frameborder="0"
-        allow="autoplay; encrypted-media"
-        allowfullscreen>
-      </iframe>
-    </div>
-  </div>
-
-  <!-- ENGLISH -->
-  <div class="videos" id="english">
-    <h3>English Classes</h3>
-    <div class="video-wrapper">
-      <iframe 
-        src="https://www.youtube.com/embed/eJuc_5pmWkw?rel=0&modestbranding=1"
-        frameborder="0"
-        allow="autoplay; encrypted-media"
-        allowfullscreen>
-      </iframe>
-    </div>
-  </div>
-
+  <h2>Login</h2>
+  <input type="email" id="loginEmail" placeholder="Email"><br>
+  <input type="password" id="loginPassword" placeholder="Password"><br>
+  <button class="btn" onclick="login()">Login</button>
 </div>
 
-<footer>
-  © priyanshu edu pvt| All Rights Reserved
-</footer>
+<!-- STUDENT PANEL -->
+<div class="subjects" id="studentPanel">
+  <h2 id="welcomeText"></h2>
+  <p>You are logged in as Student</p>
+  <button class="btn logout" onclick="logout()">Logout</button>
+</div>
 
-<script>
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="adminPanel">
+  <h2>Admin Dashboard</h2>
+  <p>All Registered Users</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>UID</th>
+      </tr>
+    </thead>
+    <tbody id="userTable"></tbody>
+  </table>
+  <button class="btn logout" onclick="logout()">Logout</button>
+</div>
 
-window.onload = function() {
-  if(localStorage.getItem("accessGranted") === "true") {
-    unlockAccess(false);
-  }
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } 
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8IW_3JhAhGuVvFwBUoqFKwEFEFZhDr6A",
+  authDomain: "priyanshu-24f9b.firebaseapp.com",
+  projectId: "priyanshu-24f9b",
+  storageBucket: "priyanshu-24f9b.firebasestorage.app",
+  messagingSenderId: "656305585506",
+  appId: "1:656305585506:web:e75d7a29e9add61e67803b"
 };
 
-function checkCode() {
-  var code = document.getElementById("codeInput").value;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-  if(code === "Priyanshu is great") {
-    localStorage.setItem("accessGranted", "true");
-    unlockAccess(true);
+// 🔥 CHANGE THIS TO YOUR ADMIN EMAIL
+const ADMIN_EMAIL = "admin@priyanshu.com";
+
+// SIGN UP
+window.signUp = function() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      return updateProfile(userCredential.user, {
+        displayName: name
+      });
+    })
+    .then(() => alert("Account Created!"))
+    .catch(error => alert(error.message));
+};
+
+// LOGIN
+window.login = function() {
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  signInWithEmailAndPassword(auth, email, password)
+    .catch(error => alert(error.message));
+};
+
+// LOGOUT
+window.logout = function() {
+  signOut(auth);
+};
+
+// AUTH STATE
+onAuthStateChanged(auth, user => {
+  if(user) {
+    document.getElementById("authBox").style.display = "none";
+
+    if(user.email === ADMIN_EMAIL) {
+      document.getElementById("adminPanel").style.display = "block";
+      document.getElementById("studentPanel").style.display = "none";
+      loadUsers();
+    } else {
+      document.getElementById("studentPanel").style.display = "block";
+      document.getElementById("adminPanel").style.display = "none";
+      document.getElementById("welcomeText").innerText =
+        "Welcome, " + user.displayName + " 👋";
+    }
+
   } else {
-    alert("Wrong Code!");
+    document.getElementById("authBox").style.display = "block";
+    document.getElementById("studentPanel").style.display = "none";
+    document.getElementById("adminPanel").style.display = "none";
   }
-}
+});
 
-function unlockAccess(showAlert) {
-  document.getElementById("accessHeading").style.display = "none";
-  document.getElementById("codeInput").style.display = "none";
-  document.getElementById("unlockBtn").style.display = "none";
-
-  document.getElementById("subjects").style.display = "block";
-}
-
-function showVideos(subjectId) {
-  var allVideos = document.getElementsByClassName("videos");
-  for(var i = 0; i < allVideos.length; i++) {
-    allVideos[i].style.display = "none";
-  }
-  document.getElementById(subjectId).style.display = "block";
-}
-
-function logout() {
-  localStorage.removeItem("accessGranted");
-  location.reload();
+// ⚠️ NOTE: Firebase client side cannot fetch all users for security reasons.
+// This is placeholder simulation.
+function loadUsers() {
+  const table = document.getElementById("userTable");
+  table.innerHTML = `
+    <tr>
+      <td>(User list visible in Firebase Console)</td>
+      <td>-</td>
+    </tr>
+  `;
 }
 
 </script>
