@@ -1,284 +1,201 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Priyanshu Classes</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Priyanshu Classes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body { margin:0; font-family:Segoe UI; background:#f1f5f9; }
-header { background:#0f172a; color:white; padding:15px; text-align:center; }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f6f9;
+      text-align: center;
+    }
 
-.access-box {
-  text-align:center;
-  padding:80px 20px;
-}
+    header {
+      background: #1e3a8a;
+      color: white;
+      padding: 20px;
+    }
 
-input {
-  padding:12px;
-  width:90%;
-  max-width:350px;
-  margin:10px;
-}
+    .container {
+      padding: 20px;
+    }
 
-button {
-  padding:10px 20px;
-  background:#2563eb;
-  color:white;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
+    input {
+      padding: 10px;
+      width: 80%;
+      max-width: 300px;
+      margin-top: 10px;
+    }
 
-.container { display:flex; height:100vh; }
+    .btn {
+      background: #2563eb;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
-.sidebar {
-  width:220px;
-  background:#1e293b;
-  color:white;
-  padding:15px;
-}
+    .btn:hover {
+      background: #1d4ed8;
+    }
 
-.sidebar button {
-  width:100%;
-  margin:8px 0;
-  padding:10px;
-  background:#334155;
-  border:none;
-  color:white;
-  border-radius:6px;
-  cursor:pointer;
-}
+    .subjects {
+      display: none;
+      margin-top: 30px;
+    }
 
-.sidebar button:hover { background:#475569; }
+    .subject-btn {
+      display: block;
+      margin: 10px auto;
+      width: 220px;
+      padding: 12px;
+      background: #0f172a;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
 
-.main {
-  flex:1;
-  padding:20px;
-  overflow:auto;
-}
+    .subject-btn:hover {
+      background: #1e293b;
+    }
 
-.card {
-  background:white;
-  padding:15px;
-  margin:15px 0;
-  border-radius:10px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.1);
-}
+    .videos {
+      display: none;
+      margin-top: 20px;
+    }
 
-iframe {
-  width:100%;
-  height:300px;
-  border-radius:8px;
-  margin-top:10px;
-}
+    /* Responsive video */
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      max-width: 800px;
+      margin: auto;
+    }
 
-.hidden { display:none; }
-.logout { background:red !important; }
-.delete { background:#dc2626; color:white; padding:6px 10px; border:none; border-radius:6px; cursor:pointer; }
-</style>
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .logout {
+      margin-top: 20px;
+      background: #dc2626;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding: 15px;
+      background: #1e3a8a;
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-<h2>Priyanshu Classes</h2>
+  <h1>Priyanshu Classes</h1>
+  <p>SSC CGL Preparation with Concept Clarity</p>
 </header>
 
-<!-- ACCESS PAGE -->
-<div id="accessPage" class="access-box">
-<h3>Enter Access Code</h3>
-<input type="text" id="accessCode" placeholder="Enter Code">
-<br>
-<button id="enterBtn">Enter</button>
-<p id="error" style="color:red;"></p>
-</div>
+<div class="container">
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="container hidden">
-  <div class="sidebar" id="sidebar"></div>
-  <div class="main">
-    <h3 id="pageTitle">Dashboard</h3>
-    <div id="mainContent"></div>
+  <h2 id="accessHeading">Enter Access Code</h2>
+
+  <input type="text" id="codeInput" placeholder="Enter Access Code">
+  <br>
+  <button class="btn" id="unlockBtn" onclick="checkCode()">Unlock</button>
+
+  <div class="subjects" id="subjects">
+    <h2>Select Subject</h2>
+
+    <div class="subject-btn" onclick="showVideos('math')">Maths</div>
+    <div class="subject-btn" onclick="showVideos('english')">English</div>
+    <div class="subject-btn" onclick="showVideos('reasoning')">Reasoning</div>
+    <div class="subject-btn" onclick="showVideos('current')">Current Affairs</div>
+
+    <button class="btn logout" onclick="logout()">Logout</button>
   </div>
+
+  <!-- MATHS -->
+  <div class="videos" id="math">
+    <h3>Maths Classes</h3>
+    <div class="video-wrapper">
+      <iframe 
+        src="https://www.youtube.com/embed/iqP3rZ9gr1Q?rel=0&modestbranding=1"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <!-- ENGLISH -->
+  <div class="videos" id="english">
+    <h3>English Classes</h3>
+    <div class="video-wrapper">
+      <iframe 
+        src="https://www.youtube.com/embed/eJuc_5pmWkw?rel=0&modestbranding=1"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
 </div>
 
-<script type="module">
+<footer>
+  © 2026 Priyanshu Classes | All Rights Reserved
+</footer>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc }
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+<script>
 
-const firebaseConfig = {
-  /* 🔥 PASTE YOUR REAL FIREBASE CONFIG HERE 🔥 */
+window.onload = function() {
+  if(localStorage.getItem("accessGranted") === "true") {
+    unlockAccess(false);
+  }
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-let currentRole = "";
-
-// ================= ACCESS CONTROL =================
-
-function checkAccess() {
-  const code = document.getElementById("accessCode").value.trim();
-  const error = document.getElementById("error");
+function checkCode() {
+  var code = document.getElementById("codeInput").value;
 
   if(code === "Priyanshu is great") {
-    currentRole = "student";
-    loadStudentSidebar();
+    localStorage.setItem("accessGranted", "true");
+    unlockAccess(true);
+  } else {
+    alert("Wrong Code!");
   }
-  else if(code === "Jai shree ram") {
-    currentRole = "admin";
-    loadAdminSidebar();
-  }
-  else {
-    error.innerText = "Invalid Access Code";
-    return;
-  }
-
-  document.getElementById("accessPage").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
 }
 
-document.getElementById("enterBtn").addEventListener("click", checkAccess);
+function unlockAccess(showAlert) {
+  document.getElementById("accessHeading").style.display = "none";
+  document.getElementById("codeInput").style.display = "none";
+  document.getElementById("unlockBtn").style.display = "none";
 
-document.getElementById("accessCode").addEventListener("keypress", function(e){
-  if(e.key === "Enter") checkAccess();
-});
+  document.getElementById("subjects").style.display = "block";
+}
+
+function showVideos(subjectId) {
+  var allVideos = document.getElementsByClassName("videos");
+  for(var i = 0; i < allVideos.length; i++) {
+    allVideos[i].style.display = "none";
+  }
+  document.getElementById(subjectId).style.display = "block";
+}
 
 function logout() {
+  localStorage.removeItem("accessGranted");
   location.reload();
-}
-
-// ================= SIDEBAR =================
-
-function loadStudentSidebar() {
-  const sidebar = document.getElementById("sidebar");
-  sidebar.innerHTML = `
-    <button data-sub="English">English</button>
-    <button data-sub="Maths">Maths</button>
-    <button data-sub="Reasoning">Reasoning</button>
-    <button data-sub="GK/GS">GK/GS</button>
-    <button class="logout">Logout</button>
-  `;
-
-  sidebar.querySelectorAll("button[data-sub]").forEach(btn=>{
-    btn.addEventListener("click", ()=> loadSubject(btn.dataset.sub));
-  });
-
-  sidebar.querySelector(".logout").addEventListener("click", logout);
-}
-
-function loadAdminSidebar() {
-  const sidebar = document.getElementById("sidebar");
-  sidebar.innerHTML = `
-    <button id="adminPanelBtn">Admin Panel</button>
-    <button class="logout">Logout</button>
-  `;
-
-  document.getElementById("adminPanelBtn").addEventListener("click", showAdmin);
-  sidebar.querySelector(".logout").addEventListener("click", logout);
-}
-
-// ================= ADMIN =================
-
-function showAdmin() {
-  document.getElementById("pageTitle").innerText = "Admin Panel";
-  document.getElementById("mainContent").innerHTML = `
-    <h4>Add Content</h4>
-    <select id="subject">
-      <option>English</option>
-      <option>Maths</option>
-      <option>Reasoning</option>
-      <option>GK/GS</option>
-    </select>
-    <select id="type">
-      <option value="video">Video</option>
-      <option value="pdf">PDF</option>
-    </select>
-    <input type="text" id="title" placeholder="Title">
-    <input type="text" id="link" placeholder="YouTube or Drive Link">
-    <button id="addBtn">Add</button>
-    <hr>
-    <h4>All Content</h4>
-    <div id="adminContent"></div>
-  `;
-
-  document.getElementById("addBtn").addEventListener("click", addContent);
-  loadAdminContent();
-}
-
-async function addContent() {
-  const subject = document.getElementById("subject").value;
-  const type = document.getElementById("type").value;
-  const title = document.getElementById("title").value;
-  const link = document.getElementById("link").value;
-
-  await addDoc(collection(db,"content"),{
-    subject, type, title, link
-  });
-
-  alert("Content Added Successfully");
-  showAdmin();
-}
-
-async function loadAdminContent() {
-  const snap = await getDocs(collection(db,"content"));
-  const container = document.getElementById("adminContent");
-  container.innerHTML = "";
-
-  snap.forEach(d=>{
-    const data = d.data();
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `
-      <b>${data.subject}</b> - ${data.title}
-      <button class="delete">Delete</button>
-    `;
-    div.querySelector(".delete").addEventListener("click", async ()=>{
-      await deleteDoc(doc(db,"content",d.id));
-      showAdmin();
-    });
-    container.appendChild(div);
-  });
-}
-
-// ================= STUDENT =================
-
-function extractYouTubeID(url){
-  const regExp = /(?:youtube\.com.*(?:\?|&)v=|youtu\.be\/)([^&#]+)/;
-  const match = url.match(regExp);
-  return match ? match[1] : null;
-}
-
-async function loadSubject(sub){
-  document.getElementById("pageTitle").innerText = sub;
-  const container = document.getElementById("mainContent");
-  container.innerHTML = "Loading...";
-
-  const snap = await getDocs(collection(db,"content"));
-  container.innerHTML = "";
-
-  snap.forEach(d=>{
-    const data = d.data();
-    if(data.subject === sub){
-      const div = document.createElement("div");
-      div.className = "card";
-
-      let contentHTML = "";
-
-      if(data.type === "video"){
-        const vid = extractYouTubeID(data.link);
-        contentHTML = `<iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe>`;
-      } else {
-        const preview = data.link.replace('/view','/preview');
-        contentHTML = `<iframe src="${preview}"></iframe>`;
-      }
-
-      div.innerHTML = `<h4>${data.title}</h4>${contentHTML}`;
-      container.appendChild(div);
-    }
-  });
 }
 
 </script>
