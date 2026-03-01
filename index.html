@@ -30,12 +30,14 @@ button {
 }
 
 .container { display:flex; height:100vh; }
+
 .sidebar {
   width:220px;
   background:#1e293b;
   color:white;
   padding:15px;
 }
+
 .sidebar button {
   width:100%;
   margin:8px 0;
@@ -46,6 +48,7 @@ button {
   border-radius:6px;
   cursor:pointer;
 }
+
 .sidebar button:hover { background:#475569; }
 
 .main {
@@ -81,25 +84,22 @@ iframe {
 <h2>Priyanshu Classes</h2>
 </header>
 
-<!-- ACCESS CODE PAGE -->
+<!-- ACCESS PAGE -->
 <div id="accessPage" class="access-box">
 <h3>Enter Access Code</h3>
 <input type="text" id="accessCode" placeholder="Enter Code">
 <br>
-<button onclick="checkAccess()">Enter</button>
+<button id="enterBtn">Enter</button>
 <p id="error" style="color:red;"></p>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="container hidden">
-
-<div class="sidebar" id="sidebar"></div>
-
-<div class="main">
-<h3 id="pageTitle">Dashboard</h3>
-<div id="mainContent"></div>
-</div>
-
+  <div class="sidebar" id="sidebar"></div>
+  <div class="main">
+    <h3 id="pageTitle">Dashboard</h3>
+    <div id="mainContent"></div>
+  </div>
 </div>
 
 <script type="module">
@@ -108,26 +108,31 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc }
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-const firebaseConfig = { /* YOUR FIREBASE CONFIG HERE */ };
+const firebaseConfig = {
+  /* 🔥 PASTE YOUR REAL FIREBASE CONFIG HERE 🔥 */
+};
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let currentRole = "";
 
-window.checkAccess = function(){
-  const code = document.getElementById("accessCode").value.trim();
+// ================= ACCESS CONTROL =================
 
-  if(code === "Priyanshu is great"){
+function checkAccess() {
+  const code = document.getElementById("accessCode").value.trim();
+  const error = document.getElementById("error");
+
+  if(code === "Priyanshu is great") {
     currentRole = "student";
     loadStudentSidebar();
   }
-  else if(code === "Jai shree ram"){
+  else if(code === "Jai shree ram") {
     currentRole = "admin";
     loadAdminSidebar();
   }
-  else{
-    document.getElementById("error").innerText = "Invalid Access Code";
+  else {
+    error.innerText = "Invalid Access Code";
     return;
   }
 
@@ -135,36 +140,51 @@ window.checkAccess = function(){
   document.getElementById("dashboard").classList.remove("hidden");
 }
 
-window.logout = function(){
+document.getElementById("enterBtn").addEventListener("click", checkAccess);
+
+document.getElementById("accessCode").addEventListener("keypress", function(e){
+  if(e.key === "Enter") checkAccess();
+});
+
+function logout() {
   location.reload();
 }
 
-function loadStudentSidebar(){
+// ================= SIDEBAR =================
+
+function loadStudentSidebar() {
+  const sidebar = document.getElementById("sidebar");
   sidebar.innerHTML = `
-    <button onclick="loadSubject('English')">English</button>
-    <button onclick="loadSubject('Maths')">Maths</button>
-    <button onclick="loadSubject('Reasoning')">Reasoning</button>
-    <button onclick="loadSubject('GK/GS')">GK/GS</button>
-    <button class="logout" onclick="logout()">Logout</button>
+    <button data-sub="English">English</button>
+    <button data-sub="Maths">Maths</button>
+    <button data-sub="Reasoning">Reasoning</button>
+    <button data-sub="GK/GS">GK/GS</button>
+    <button class="logout">Logout</button>
   `;
+
+  sidebar.querySelectorAll("button[data-sub]").forEach(btn=>{
+    btn.addEventListener("click", ()=> loadSubject(btn.dataset.sub));
+  });
+
+  sidebar.querySelector(".logout").addEventListener("click", logout);
 }
 
-function loadAdminSidebar(){
+function loadAdminSidebar() {
+  const sidebar = document.getElementById("sidebar");
   sidebar.innerHTML = `
-    <button onclick="showAdmin()">Admin Panel</button>
-    <button class="logout" onclick="logout()">Logout</button>
+    <button id="adminPanelBtn">Admin Panel</button>
+    <button class="logout">Logout</button>
   `;
+
+  document.getElementById("adminPanelBtn").addEventListener("click", showAdmin);
+  sidebar.querySelector(".logout").addEventListener("click", logout);
 }
 
-function extractYouTubeID(url){
-  const regExp = /(?:youtube\.com.*(?:\?|&)v=|youtu\.be\/)([^&#]+)/;
-  const match = url.match(regExp);
-  return match ? match[1] : null;
-}
+// ================= ADMIN =================
 
-window.showAdmin = function(){
-  pageTitle.innerText = "Admin Panel";
-  mainContent.innerHTML = `
+function showAdmin() {
+  document.getElementById("pageTitle").innerText = "Admin Panel";
+  document.getElementById("mainContent").innerHTML = `
     <h4>Add Content</h4>
     <select id="subject">
       <option>English</option>
@@ -178,55 +198,75 @@ window.showAdmin = function(){
     </select>
     <input type="text" id="title" placeholder="Title">
     <input type="text" id="link" placeholder="YouTube or Drive Link">
-    <button onclick="addContent()">Add</button>
+    <button id="addBtn">Add</button>
     <hr>
     <h4>All Content</h4>
     <div id="adminContent"></div>
   `;
 
+  document.getElementById("addBtn").addEventListener("click", addContent);
   loadAdminContent();
 }
 
-window.addContent = async function(){
+async function addContent() {
+  const subject = document.getElementById("subject").value;
+  const type = document.getElementById("type").value;
+  const title = document.getElementById("title").value;
+  const link = document.getElementById("link").value;
+
   await addDoc(collection(db,"content"),{
-    subject:subject.value,
-    type:type.value,
-    title:title.value,
-    link:link.value
+    subject, type, title, link
   });
-  alert("Content Added");
+
+  alert("Content Added Successfully");
   showAdmin();
 }
 
-async function loadAdminContent(){
+async function loadAdminContent() {
   const snap = await getDocs(collection(db,"content"));
-  adminContent.innerHTML = "";
+  const container = document.getElementById("adminContent");
+  container.innerHTML = "";
+
   snap.forEach(d=>{
     const data = d.data();
-    adminContent.innerHTML += `
-      <div class="card">
-        <b>${data.subject}</b> - ${data.title}
-        <button class="delete" onclick="deleteContent('${d.id}')">Delete</button>
-      </div>
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+      <b>${data.subject}</b> - ${data.title}
+      <button class="delete">Delete</button>
     `;
+    div.querySelector(".delete").addEventListener("click", async ()=>{
+      await deleteDoc(doc(db,"content",d.id));
+      showAdmin();
+    });
+    container.appendChild(div);
   });
 }
 
-window.deleteContent = async function(id){
-  await deleteDoc(doc(db,"content",id));
-  showAdmin();
+// ================= STUDENT =================
+
+function extractYouTubeID(url){
+  const regExp = /(?:youtube\.com.*(?:\?|&)v=|youtu\.be\/)([^&#]+)/;
+  const match = url.match(regExp);
+  return match ? match[1] : null;
 }
 
-window.loadSubject = async function(sub){
-  pageTitle.innerText = sub;
-  mainContent.innerHTML = "Loading...";
+async function loadSubject(sub){
+  document.getElementById("pageTitle").innerText = sub;
+  const container = document.getElementById("mainContent");
+  container.innerHTML = "Loading...";
+
   const snap = await getDocs(collection(db,"content"));
-  mainContent.innerHTML = "";
+  container.innerHTML = "";
 
   snap.forEach(d=>{
     const data = d.data();
     if(data.subject === sub){
+      const div = document.createElement("div");
+      div.className = "card";
+
       let contentHTML = "";
+
       if(data.type === "video"){
         const vid = extractYouTubeID(data.link);
         contentHTML = `<iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe>`;
@@ -235,12 +275,8 @@ window.loadSubject = async function(sub){
         contentHTML = `<iframe src="${preview}"></iframe>`;
       }
 
-      mainContent.innerHTML += `
-        <div class="card">
-          <h4>${data.title}</h4>
-          ${contentHTML}
-        </div>
-      `;
+      div.innerHTML = `<h4>${data.title}</h4>${contentHTML}`;
+      container.appendChild(div);
     }
   });
 }
