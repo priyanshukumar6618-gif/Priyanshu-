@@ -1,12 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Priyanshu Classes Dashboard</title>
+<title>Priyanshu Classes</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body { margin:0; font-family:Segoe UI; background:#f1f5f9; }
 header { background:#0f172a; color:white; padding:15px; text-align:center; }
+
+.access-box {
+  text-align:center;
+  padding:80px 20px;
+}
+
+input {
+  padding:12px;
+  width:90%;
+  max-width:350px;
+  margin:10px;
+}
+
+button {
+  padding:10px 20px;
+  background:#2563eb;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
 .container { display:flex; height:100vh; }
 .sidebar {
   width:220px;
@@ -16,13 +38,13 @@ header { background:#0f172a; color:white; padding:15px; text-align:center; }
 }
 .sidebar button {
   width:100%;
-  padding:10px;
   margin:8px 0;
+  padding:10px;
   background:#334155;
   border:none;
   color:white;
-  cursor:pointer;
   border-radius:6px;
+  cursor:pointer;
 }
 .sidebar button:hover { background:#475569; }
 
@@ -47,22 +69,6 @@ iframe {
   margin-top:10px;
 }
 
-input, select {
-  padding:10px;
-  margin:8px 0;
-  width:100%;
-  max-width:400px;
-}
-
-button.primary {
-  background:#2563eb;
-  color:white;
-  padding:10px 15px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-
 .hidden { display:none; }
 .logout { background:red !important; }
 .delete { background:#dc2626; color:white; padding:6px 10px; border:none; border-radius:6px; cursor:pointer; }
@@ -75,23 +81,16 @@ button.primary {
 <h2>Priyanshu Classes</h2>
 </header>
 
-<div id="authSection" style="text-align:center;padding:40px;">
-<h3>Login</h3>
-<input type="email" id="loginEmail" placeholder="Email"><br>
-<input type="password" id="loginPassword" placeholder="Password"><br>
-<button class="primary" onclick="login()">Login</button>
-<p>Don't have account?</p>
-<button onclick="showSignup()">Sign Up</button>
+<!-- ACCESS CODE PAGE -->
+<div id="accessPage" class="access-box">
+<h3>Enter Access Code</h3>
+<input type="text" id="accessCode" placeholder="Enter Code">
+<br>
+<button onclick="checkAccess()">Enter</button>
+<p id="error" style="color:red;"></p>
 </div>
 
-<div id="signupSection" class="hidden" style="text-align:center;padding:40px;">
-<h3>Create Account</h3>
-<input type="email" id="signupEmail" placeholder="Email"><br>
-<input type="password" id="signupPassword" placeholder="Password"><br>
-<button class="primary" onclick="signUp()">Create Account</button>
-<button onclick="showLogin()">Back</button>
-</div>
-
+<!-- DASHBOARD -->
 <div id="dashboard" class="container hidden">
 
 <div class="sidebar" id="sidebar"></div>
@@ -106,146 +105,147 @@ button.primary {
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut }
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc }
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-const firebaseConfig = { /* YOUR CONFIG HERE */ };
-const ADMIN_EMAIL="priyanshukumar6618@gmail.com";
+const firebaseConfig = { /* YOUR FIREBASE CONFIG HERE */ };
 
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-window.showSignup=()=>{ authSection.classList.add("hidden"); signupSection.classList.remove("hidden"); }
-window.showLogin=()=>{ signupSection.classList.add("hidden"); authSection.classList.remove("hidden"); }
+let currentRole = "";
 
-window.signUp=async()=>{
-await createUserWithEmailAndPassword(auth,signupEmail.value,signupPassword.value);
-alert("Account Created!");
-showLogin();
+window.checkAccess = function(){
+  const code = document.getElementById("accessCode").value.trim();
+
+  if(code === "Priyanshu is great"){
+    currentRole = "student";
+    loadStudentSidebar();
+  }
+  else if(code === "Jai shree ram"){
+    currentRole = "admin";
+    loadAdminSidebar();
+  }
+  else{
+    document.getElementById("error").innerText = "Invalid Access Code";
+    return;
+  }
+
+  document.getElementById("accessPage").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
 }
 
-window.login=async()=>{
-await signInWithEmailAndPassword(auth,loginEmail.value,loginPassword.value);
+window.logout = function(){
+  location.reload();
 }
 
-window.logout=()=>signOut(auth);
+function loadStudentSidebar(){
+  sidebar.innerHTML = `
+    <button onclick="loadSubject('English')">English</button>
+    <button onclick="loadSubject('Maths')">Maths</button>
+    <button onclick="loadSubject('Reasoning')">Reasoning</button>
+    <button onclick="loadSubject('GK/GS')">GK/GS</button>
+    <button class="logout" onclick="logout()">Logout</button>
+  `;
+}
+
+function loadAdminSidebar(){
+  sidebar.innerHTML = `
+    <button onclick="showAdmin()">Admin Panel</button>
+    <button class="logout" onclick="logout()">Logout</button>
+  `;
+}
 
 function extractYouTubeID(url){
-const regExp=/(?:youtube\.com.*(?:\?|&)v=|youtu\.be\/)([^&#]+)/;
-const match=url.match(regExp);
-return match?match[1]:null;
+  const regExp = /(?:youtube\.com.*(?:\?|&)v=|youtu\.be\/)([^&#]+)/;
+  const match = url.match(regExp);
+  return match ? match[1] : null;
 }
 
-function loadSidebar(user){
-sidebar.innerHTML="";
+window.showAdmin = function(){
+  pageTitle.innerText = "Admin Panel";
+  mainContent.innerHTML = `
+    <h4>Add Content</h4>
+    <select id="subject">
+      <option>English</option>
+      <option>Maths</option>
+      <option>Reasoning</option>
+      <option>GK/GS</option>
+    </select>
+    <select id="type">
+      <option value="video">Video</option>
+      <option value="pdf">PDF</option>
+    </select>
+    <input type="text" id="title" placeholder="Title">
+    <input type="text" id="link" placeholder="YouTube or Drive Link">
+    <button onclick="addContent()">Add</button>
+    <hr>
+    <h4>All Content</h4>
+    <div id="adminContent"></div>
+  `;
 
-if(user.email===ADMIN_EMAIL){
-sidebar.innerHTML+=`<button onclick="showAdmin()">Admin Panel</button>`;
-}else{
-["English","Maths","Reasoning","GK/GS"].forEach(sub=>{
-sidebar.innerHTML+=`<button onclick="loadSubject('${sub}')">${sub}</button>`;
-});
+  loadAdminContent();
 }
 
-sidebar.innerHTML+=`<button class="logout" onclick="logout()">Logout</button>`;
-}
-
-window.showAdmin=()=>{
-pageTitle.innerText="Admin Panel";
-mainContent.innerHTML=`
-<h4>Add Content</h4>
-<select id="subject">
-<option>English</option>
-<option>Maths</option>
-<option>Reasoning</option>
-<option>GK/GS</option>
-</select>
-<select id="type">
-<option value="video">Video</option>
-<option value="pdf">PDF</option>
-</select>
-<input type="text" id="title" placeholder="Title">
-<input type="text" id="link" placeholder="YouTube or Drive Link">
-<button class="primary" onclick="addContent()">Add</button>
-<hr>
-<h4>All Content</h4>
-<div id="adminContent"></div>
-`;
-
-loadAdminContent();
-}
-
-window.addContent=async()=>{
-await addDoc(collection(db,"content"),{
-subject:subject.value,
-type:type.value,
-title:title.value,
-link:link.value
-});
-alert("Content Added");
-showAdmin();
+window.addContent = async function(){
+  await addDoc(collection(db,"content"),{
+    subject:subject.value,
+    type:type.value,
+    title:title.value,
+    link:link.value
+  });
+  alert("Content Added");
+  showAdmin();
 }
 
 async function loadAdminContent(){
-const snap=await getDocs(collection(db,"content"));
-adminContent.innerHTML="";
-snap.forEach(d=>{
-const data=d.data();
-adminContent.innerHTML+=`
-<div class="card">
-<b>${data.subject}</b> - ${data.title}
-<button class="delete" onclick="deleteContent('${d.id}')">Delete</button>
-</div>
-`;
-});
+  const snap = await getDocs(collection(db,"content"));
+  adminContent.innerHTML = "";
+  snap.forEach(d=>{
+    const data = d.data();
+    adminContent.innerHTML += `
+      <div class="card">
+        <b>${data.subject}</b> - ${data.title}
+        <button class="delete" onclick="deleteContent('${d.id}')">Delete</button>
+      </div>
+    `;
+  });
 }
 
-window.deleteContent=async(id)=>{
-await deleteDoc(doc(db,"content",id));
-showAdmin();
+window.deleteContent = async function(id){
+  await deleteDoc(doc(db,"content",id));
+  showAdmin();
 }
 
-window.loadSubject=async(sub)=>{
-pageTitle.innerText=sub;
-mainContent.innerHTML="Loading...";
-const snap=await getDocs(collection(db,"content"));
-mainContent.innerHTML="";
-snap.forEach(d=>{
-const data=d.data();
-if(data.subject===sub){
-let contentHTML="";
-if(data.type==="video"){
-const vid=extractYouTubeID(data.link);
-contentHTML=`<iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe>`;
-}else{
-const preview=data.link.replace('/view','/preview');
-contentHTML=`<iframe src="${preview}"></iframe>`;
-}
-mainContent.innerHTML+=`
-<div class="card">
-<h4>${data.title}</h4>
-${contentHTML}
-</div>
-`;
-}
-});
-}
+window.loadSubject = async function(sub){
+  pageTitle.innerText = sub;
+  mainContent.innerHTML = "Loading...";
+  const snap = await getDocs(collection(db,"content"));
+  mainContent.innerHTML = "";
 
-onAuthStateChanged(auth,(user)=>{
-if(user){
-authSection.classList.add("hidden");
-signupSection.classList.add("hidden");
-dashboard.classList.remove("hidden");
-loadSidebar(user);
-}else{
-dashboard.classList.add("hidden");
-authSection.classList.remove("hidden");
+  snap.forEach(d=>{
+    const data = d.data();
+    if(data.subject === sub){
+      let contentHTML = "";
+      if(data.type === "video"){
+        const vid = extractYouTubeID(data.link);
+        contentHTML = `<iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe>`;
+      } else {
+        const preview = data.link.replace('/view','/preview');
+        contentHTML = `<iframe src="${preview}"></iframe>`;
+      }
+
+      mainContent.innerHTML += `
+        <div class="card">
+          <h4>${data.title}</h4>
+          ${contentHTML}
+        </div>
+      `;
+    }
+  });
 }
-});
 
 </script>
+
 </body>
 </html>
