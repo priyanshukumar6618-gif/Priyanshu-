@@ -3,16 +3,14 @@
 <head>
   <title>Priyanshu Classes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <style>
     body { font-family: Arial; margin:0; background:#f4f6f9; text-align:center; }
     header { background:#1e3a8a; color:white; padding:20px; }
     input { padding:10px; width:80%; max-width:300px; margin:10px; }
     .btn { padding:10px 20px; background:#2563eb; color:white; border:none; border-radius:5px; cursor:pointer; }
-    .subjects, .admin-panel { display:none; margin-top:30px; }
+    .link { color:#2563eb; cursor:pointer; }
+    .panel { display:none; margin-top:30px; }
     .logout { background:red; margin-top:20px; }
-    table { margin:auto; border-collapse:collapse; margin-top:20px; }
-    table, th, td { border:1px solid #ccc; padding:10px; }
   </style>
 </head>
 
@@ -22,48 +20,45 @@
   <h1>Priyanshu Classes</h1>
 </header>
 
-<div id="authBox">
+<!-- SIGN UP -->
+<div id="signupPanel" class="panel" style="display:block;">
   <h2>Sign Up</h2>
   <input type="text" id="name" placeholder="Full Name"><br>
   <input type="email" id="email" placeholder="Email"><br>
-  <input type="password" id="password" placeholder="Password"><br>
+  <input type="password" id="password" placeholder="Password (min 6 chars)"><br>
   <button class="btn" onclick="signUp()">Create Account</button>
+  <p>Already have an account? <span class="link" onclick="showLogin()">Login</span></p>
+</div>
 
-  <hr>
-
+<!-- LOGIN -->
+<div id="loginPanel" class="panel">
   <h2>Login</h2>
   <input type="email" id="loginEmail" placeholder="Email"><br>
   <input type="password" id="loginPassword" placeholder="Password"><br>
   <button class="btn" onclick="login()">Login</button>
+  <p>New user? <span class="link" onclick="showSignup()">Sign Up</span></p>
 </div>
 
-<!-- STUDENT PANEL -->
-<div class="subjects" id="studentPanel">
+<!-- SUBJECT PANEL -->
+<div id="subjectPanel" class="panel">
   <h2 id="welcomeText"></h2>
-  <p>You are logged in as Student</p>
+  <h3>Select Subject</h3>
+  <button class="btn">Maths</button>
+  <button class="btn">English</button>
   <button class="btn logout" onclick="logout()">Logout</button>
 </div>
 
-<!-- ADMIN PANEL -->
-<div class="admin-panel" id="adminPanel">
-  <h2>Admin Dashboard</h2>
-  <p>All Registered Users</p>
-  <table>
-    <thead>
-      <tr>
-        <th>Email</th>
-        <th>UID</th>
-      </tr>
-    </thead>
-    <tbody id="userTable"></tbody>
-  </table>
+<!-- VERIFY MESSAGE -->
+<div id="verifyPanel" class="panel">
+  <h3>Please verify your email 📧</h3>
+  <p>We sent a verification link to your email.</p>
+  <button class="btn" onclick="resendVerification()">Resend Email</button>
   <button class="btn logout" onclick="logout()">Logout</button>
 </div>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } 
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendEmailVerification, onAuthStateChanged, signOut } 
 from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -78,74 +73,72 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// 🔥 CHANGE THIS TO YOUR ADMIN EMAIL
-const ADMIN_EMAIL = "admin@priyanshu.com";
-
-// SIGN UP
-window.signUp = function() {
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      return updateProfile(userCredential.user, {
-        displayName: name
-      });
-    })
-    .then(() => alert("Account Created!"))
-    .catch(error => alert(error.message));
-};
-
-// LOGIN
-window.login = function() {
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
-
-  signInWithEmailAndPassword(auth, email, password)
-    .catch(error => alert(error.message));
-};
-
-// LOGOUT
-window.logout = function() {
-  signOut(auth);
-};
-
-// AUTH STATE
-onAuthStateChanged(auth, user => {
-  if(user) {
-    document.getElementById("authBox").style.display = "none";
-
-    if(user.email === ADMIN_EMAIL) {
-      document.getElementById("adminPanel").style.display = "block";
-      document.getElementById("studentPanel").style.display = "none";
-      loadUsers();
-    } else {
-      document.getElementById("studentPanel").style.display = "block";
-      document.getElementById("adminPanel").style.display = "none";
-      document.getElementById("welcomeText").innerText =
-        "Welcome, " + user.displayName + " 👋";
-    }
-
-  } else {
-    document.getElementById("authBox").style.display = "block";
-    document.getElementById("studentPanel").style.display = "none";
-    document.getElementById("adminPanel").style.display = "none";
-  }
-});
-
-// ⚠️ NOTE: Firebase client side cannot fetch all users for security reasons.
-// This is placeholder simulation.
-function loadUsers() {
-  const table = document.getElementById("userTable");
-  table.innerHTML = `
-    <tr>
-      <td>(User list visible in Firebase Console)</td>
-      <td>-</td>
-    </tr>
-  `;
+function hideAll() {
+  document.getElementById("signupPanel").style.display="none";
+  document.getElementById("loginPanel").style.display="none";
+  document.getElementById("subjectPanel").style.display="none";
+  document.getElementById("verifyPanel").style.display="none";
 }
 
+window.showLogin = function() {
+  hideAll();
+  document.getElementById("loginPanel").style.display="block";
+}
+
+window.showSignup = function() {
+  hideAll();
+  document.getElementById("signupPanel").style.display="block";
+}
+
+window.signUp = function() {
+  const name=document.getElementById("name").value;
+  const email=document.getElementById("email").value;
+  const password=document.getElementById("password").value;
+
+  createUserWithEmailAndPassword(auth,email,password)
+  .then((userCredential)=>{
+    return updateProfile(userCredential.user,{displayName:name});
+  })
+  .then(()=>{
+    sendEmailVerification(auth.currentUser);
+    alert("Account created! Please verify your email.");
+  })
+  .catch(error=>alert(error.message));
+}
+
+window.login = function() {
+  const email=document.getElementById("loginEmail").value;
+  const password=document.getElementById("loginPassword").value;
+
+  signInWithEmailAndPassword(auth,email,password)
+  .catch(error=>alert(error.message));
+}
+
+window.logout = function() {
+  signOut(auth);
+}
+
+window.resendVerification=function(){
+  sendEmailVerification(auth.currentUser);
+  alert("Verification email sent again!");
+}
+
+onAuthStateChanged(auth,user=>{
+  if(user){
+    if(user.emailVerified){
+      hideAll();
+      document.getElementById("subjectPanel").style.display="block";
+      document.getElementById("welcomeText").innerText=
+      "Welcome, "+user.displayName+" 👋";
+    } else {
+      hideAll();
+      document.getElementById("verifyPanel").style.display="block";
+    }
+  } else {
+    hideAll();
+    document.getElementById("signupPanel").style.display="block";
+  }
+});
 </script>
 
 </body>
