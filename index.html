@@ -199,10 +199,21 @@ function unlockAccess(showAlert) {
 
 function showVideos(subjectId) {
   var allVideos = document.getElementsByClassName("videos");
-  for(var i = 0; i < allVideos.length; i++) {
+
+  for (var i = 0; i < allVideos.length; i++) {
     allVideos[i].style.display = "none";
   }
-  document.getElementById(subjectId).style.display = "block";
+
+  var selected = document.getElementById(subjectId);
+  selected.style.display = "block";
+
+  // 🔥 AUTO SCROLL
+  setTimeout(() => {
+    selected.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 100);
 }
 
 function logout() {
