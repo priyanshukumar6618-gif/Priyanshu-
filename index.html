@@ -132,6 +132,17 @@
    transform: scale(1);
   }
  }
+
+.video-title {
+  margin-top: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  background: #e2e8f0;
+  padding: 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
   </style>
 </head>
 
@@ -353,7 +364,21 @@ function showVideos(subjectId) {
   }
 
   var selected = document.getElementById(subjectId);
-  selected.style.display = "block";
+
+  if (selected) {
+    selected.style.display = "block";
+
+    setTimeout(() => {
+      selected.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }, 100);
+
+  } else {
+    console.log("ID not found:", subjectId);
+  }
+}
 
   // AUTO SCROLL
   setTimeout(() => {
