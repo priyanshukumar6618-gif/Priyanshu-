@@ -332,7 +332,7 @@ window.onload = function() {
 };
 
 function checkCode() {
-  var code = document.getElementById("codeInput").value;
+  var code = document.getElementById("codeInput").value.trim();
 
   if(code === "Priyanshu is great") {
     localStorage.setItem("accessGranted", "true");
