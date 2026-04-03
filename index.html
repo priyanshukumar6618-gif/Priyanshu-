@@ -27,7 +27,7 @@
       width: 80%;
       max-width: 300px;
       margin-top: 10px;
-      border-radius: 5px
+      border-radius: 5px;
       border: 1px solid #ccc;
     }
 
@@ -230,12 +230,18 @@ function checkCode() {
   }
 }
 
-function unlockAccess(showAlert) {
+function unlockAccess() {
   document.getElementById("accessHeading").style.display = "none";
   document.getElementById("codeInput").style.display = "none";
   document.getElementById("unlockBtn").style.display = "none";
 
-  document.getElementById("subjects").style.display = "block";
+  const welcome = document.getElementById("welcomeScreen");
+  welcome.style.display = "flex";
+
+  setTimeout(() => {
+    welcome.style.display = "none";
+    document.getElementById("subjects").style.display = "block";
+  }, 2500);
 }
 
 function showVideos(subjectId) {
