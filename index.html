@@ -327,7 +327,7 @@ onclick="showVideos('eco')">Economics</div>
 
 window.onload = function() {
   if(localStorage.getItem("accessGranted") === "true") {
-    unlockAccess(false);
+    unlockAccess();
   }
 };
 
@@ -336,7 +336,7 @@ function checkCode() {
 
   if(code === "Priyanshu is great") {
     localStorage.setItem("accessGranted", "true");
-    unlockAccess(true);
+    unlockAccess();
   } else {
     alert("Wrong Code!");
   }
@@ -378,15 +378,6 @@ function showVideos(subjectId) {
   } else {
     console.log("ID not found:", subjectId);
   }
-}
-
-  // AUTO SCROLL
-  setTimeout(() => {
-    selected.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }, 100);
 }
 
 function logout() {
