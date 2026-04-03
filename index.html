@@ -27,6 +27,8 @@
       width: 80%;
       max-width: 300px;
       margin-top: 10px;
+      border-radius: 5px
+      border: 1px solid #ccc;
     }
 
     .btn {
@@ -37,6 +39,7 @@
       border-radius: 5px;
       cursor: pointer;
       margin-top: 10px;
+      transition: 0.3s;
     }
 
     .btn:hover {
@@ -97,6 +100,38 @@
       background: #1e3a8a;
       color: white;
     }
+
+    /* WELCOME SCREEN */
+    #welcomescreen {
+       display: none;
+       position: fixed;
+       inset: 0;
+       background: #0f172a;
+       color: white;
+       z-index: 9999;
+       justify-content: center;
+       align-items: center;
+       flex-direction: column;
+   }
+
+   #welcomeText {
+     font-size: 28px
+     animation: Zoomfade 2s ease;
+   }
+
+   @keyframes zoomFade {
+    0% {
+      opacity: 0;
+      transform: scale(0.6);
+   }
+   50% {
+     opacity: 1;
+     transform: scale(1.1);
+  }
+  100% {
+   transform: scale(1);
+  }
+ }
   </style>
 </head>
 
@@ -106,6 +141,12 @@
   <h1>Priyanshu Classes</h1>
   <p>SSC CGL Preparation with Concept Clarity</p>
 </header>
+
+<!-- Welcome Screen -->
+<div id="welcomeScreen">
+  <h1 id="welcomeText">Welcome to Priyanshu Classes</h1>
+  <p>Future Officer 🚀 </p>
+</div>
 
 <div class="container">
 
@@ -207,7 +248,7 @@ function showVideos(subjectId) {
   var selected = document.getElementById(subjectId);
   selected.style.display = "block";
 
-  // 🔥 AUTO SCROLL
+  // AUTO SCROLL
   setTimeout(() => {
     selected.scrollIntoView({
       behavior: "smooth",
