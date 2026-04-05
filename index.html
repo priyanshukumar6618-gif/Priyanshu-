@@ -133,6 +133,29 @@
   }
  }
 
+.lecture-card {
+  position: relative;
+  max-width: 400px;
+  margin: 20px auto;
+  cursor: pointer;
+}
+
+.lecture-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.play-btn {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  color: white;
+  background: rgba(0,0,0,0.6);
+  padding: 10px 15px;
+  border-radius: 50%;
+}
 .video-title {
   margin-top: 12px;
   font-size: 18px;
@@ -190,14 +213,25 @@ onclick="showVideos('eco')">Economics</div>
 
   <!-- MATHS -->
   <div class="videos" id="math">
-    <h3>Maths Classes</h3>
-    <div class="video-wrapper">
-      <iframe  src="https://www.youtube.com/embed/iqP3rZ9gr1Q?controls=1&rel=0&modestbranding=1"
-        frameborder="0"
-        allow="autoplay; encrypted-media"
-        allowfullscreen>
-      </iframe>
-    </div>
+  <h3>Maths Classes</h3>
+
+  <div class="lecture-card" onclick="playVideo('iqP3rZ9gr1Q')">
+    <img src="https://img.youtube.com/vi/iqP3rZ9gr1Q/hqdefault.jpg">
+    <div class="play-btn">▶</div>
+    <p class="video-title">Lecture 1: Introduction to Maths</p>
+  </div>
+
+  <!-- PLAYER (hidden initially) -->
+  <div class="video-wrapper" id="player" style="display:none;">
+    <iframe id="videoFrame"
+      src=""
+      frameborder="0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+</div>
     
     <!-- TITLE BELOW VIDEO -->
   <p class="video-title">Lecture 1: Introduction to Maths</p>
@@ -383,6 +417,19 @@ function showVideos(subjectId) {
 function logout() {
   localStorage.removeItem("accessGranted");
   location.reload();
+}
+
+function playVideo(videoId) {
+  var player = document.getElementById("player");
+  var frame = document.getElementById("videoFrame");
+
+  player.style.display = "block";
+
+  frame.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1";
+
+  player.scrollIntoView({
+    behavior: "smooth"
+  });
 }
 
 </script>
