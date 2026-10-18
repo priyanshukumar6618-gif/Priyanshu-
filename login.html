@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Priyanshu Classes</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #eef3ff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 30px 24px;
+    border-radius: 20px;
+    box-shadow: 0 10px 35px #10265c20;
+}
+
+.logo {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 28px;
+    font-size: 14px;
+}
+
+h2 {
+    color: #10265c;
+    margin-bottom: 8px;
+}
+
+.description {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    margin: 15px 0 7px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #334155;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #2563eb;
+}
+
+.forgot {
+    display: block;
+    text-align: right;
+    margin: 12px 0 20px;
+    color: #2563eb;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 9px;
+    background: #173b87;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+}
+
+.register {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.register a {
+    color: #2563eb;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.back {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+#message {
+    margin-top: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <div class="logo">🎓</div>
+
+    <div class="logo"
+         style="font-size:23px;color:#173b87;font-weight:bold;">
+        Priyanshu Classes
+    </div>
+
+    <p class="subtitle">Your Learning, Our Mission</p>
+
+    <h2>Welcome Back! 👋</h2>
+
+    <p class="description">
+        Login to continue your learning journey.
+    </p>
+
+    <form id="loginForm">
+
+        <label for="email">Email Address</label>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            autocomplete="email"
+            required
+        >
+
+        <label for="password">Password</label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+        >
+
+        <a href="#" class="forgot" id="forgotLink">
+            Forgot Password?
+        </a>
+
+        <button type="submit" id="loginButton">
+            Login to Account
+        </button>
+
+        <p id="message" role="status" aria-live="polite"></p>
+
+    </form>
+
+    <div class="register">
+        Don't have an account?
+        <a href="register.html">Create Account</a>
+    </div>
+
+    <a href="index.html" class="back">← Back to Home</a>
+
+</div>
+
+<script type="module">
+
+import { initializeApp, getApps, getApp }
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyB8IW_3JhAhGuVvFwBUoqFKwEFEFZhDr6A",
+    authDomain: "priyanshu-24f9b.firebaseapp.com",
+    projectId: "priyanshu-24f9b",
+    storageBucket: "priyanshu-24f9b.firebasestorage.app",
+    messagingSenderId: "656305585506",
+    appId: "1:656305585506:web:e75d7a29e9add61e67803b",
+    measurementId: "G-PQPWFR9FHY"
+};
+
+const app = getApps().length
+    ? getApp()
+    : initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const form = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const button = document.getElementById("loginButton");
+const message = document.getElementById("message");
+const forgotLink = document.getElementById("forgotLink");
+
+function showMessage(text, success = false) {
+    message.textContent = text;
+    message.style.color = success ? "#15803d" : "#b91c1c";
+}
+
+const errors = {
+    "auth/invalid-email": "Please enter a valid email address.",
+    "auth/invalid-credential": "Incorrect email or password.",
+    "auth/user-not-found": "No account found. Please register first.",
+    "auth/wrong-password": "Incorrect email or password.",
+    "auth/too-many-requests": "Too many attempts. Please try again later.",
+    "auth/network-request-failed": "Network error. Check your internet.",
+    "auth/operation-not-allowed": "Email/Password login is disabled in Firebase.",
+    "auth/requests-from-referer-http://localhost:8158-are-blocked":
+        "Local preview is blocked. Open the published Netlify website."
+};
+
+form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    button.disabled = true;
+    button.textContent = "Logging in...";
+    showMessage("");
+
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+
+        showMessage("Login successful! Opening student area...", true);
+
+        setTimeout(() => {
+            window.location.href = "dashboard.html";
+        }, 800);
+
+    } catch (error) {
+        showMessage(
+            errors[error.code] ||
+            "Login failed. Error: " + error.code
+        );
+    } finally {
+        button.disabled = false;
+        button.textContent = "Login to Account";
+    }
+});
+
+forgotLink.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    const email = emailInput.value.trim();
+
+    if (!email) {
+        showMessage("Enter your email address first.");
+        emailInput.focus();
+        return;
+    }
+
+    forgotLink.style.pointerEvents = "none";
+
+    try {
+        await sendPasswordResetEmail(auth, email);
+
+        showMessage(
+            "If an account exists for this email, a password reset email has been sent. Check your inbox and spam folder.",
+            true
+        );
+
+    } catch (error) {
+        const text =
+            error.code === "auth/invalid-email"
+                ? "Please enter a valid email address."
+                : error.code === "auth/network-request-failed"
+                ? "Network error. Please try again."
+                : "Could not send reset email. Error: " + error.code;
+
+        showMessage(text);
+
+    } finally {
+        forgotLink.style.pointerEvents = "auto";
+    }
+});
+
+</script>
+
+</body>
+</html>

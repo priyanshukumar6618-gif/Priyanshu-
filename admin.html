@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Priyanshu Classes</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    header {
+      background: #172554;
+      color: white;
+      padding: 20px;
+    }
+
+    header h1 {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .welcome {
+      margin-bottom: 22px;
+    }
+
+    .welcome h2 {
+      font-size: 23px;
+      margin-bottom: 8px;
+    }
+
+    .welcome p {
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px 15px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px #0000000c;
+      border: 1px solid #e2e8f0;
+    }
+
+    .icon {
+      font-size: 30px;
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      margin-top: 12px;
+    }
+
+    .notice {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 22px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 20px;
+      color: #1d4ed8;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 22px;
+      color: #64748b;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🎓 Priyanshu Classes</h1>
+    <p>Administrator Dashboard</p>
+  </header>
+
+  <main class="container">
+
+    <section class="welcome">
+      <h2>Welcome, Admin 👋</h2>
+      <p>Manage your educational platform from one place.</p>
+    </section>
+
+    <section class="grid">
+
+      <div class="card">
+        <div class="icon">🎥</div>
+        <h3>Video Lectures</h3>
+        <p>Manage subject-wise lectures and video links.</p>
+        <span class="badge">Setup pending</span>
+      </div>
+
+      <div class="card">
+        <div class="icon">📚</div>
+        <h3>PDF Notes</h3>
+        <p>Organize study materials and chapter-wise PDFs.</p>
+        <span class="badge">Setup pending</span>
+      </div>
+
+      <div class="card">
+        <div class="icon">📝</div>
+        <h3>Online Tests</h3>
+        <p>Prepare mock tests and practice questions.</p>
+        <span class="badge">Setup pending</span>
+      </div>
+
+      <div class="card">
+        <div class="icon">👨‍🎓</div>
+        <h3>Students</h3>
+        <p>Build a system to manage registered students.</p>
+        <span class="badge">Setup pending</span>
+      </div>
+
+      <div class="card">
+        <div class="icon">📊</div>
+        <h3>Student Progress</h3>
+        <p>View test scores and learning progress.</p>
+        <span class="badge">Setup pending</span>
+      </div>
+
+      <div class="card">
+        <div class="icon">⚙️</div>
+        <h3>Platform Settings</h3>
+        <p>Configure courses and platform settings.</p>
+        <span class="badge">Setup pending</span>
+      </div>
+
+    </section>
+
+    <div class="notice">
+      <strong>Important:</strong> This is currently the dashboard design.
+      The cards do not upload files or manage students yet.
+      We will connect them to Firebase after setting up secure admin access.
+    </div>
+
+    <a class="back" href="dashboard.html">← Back to Student Dashboard</a>
+
+  </main>
+
+  <footer>
+    © 2026 Priyanshu Classes | Learn • Practice • Succeed
+  </footer>
+
+</body>
+</html>
