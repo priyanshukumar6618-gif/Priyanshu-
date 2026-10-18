@@ -1,435 +1,226 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Priyanshu Classes</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priyanshu Classes</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f4f6f9;
-      text-align: center;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    header {
-      background: #1e3a8a;
-      color: white;
-      padding: 20px;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fc;
+            color: #172554;
+        }
 
-    .container {
-      padding: 20px;
-    }
+        header {
+            background: #10265c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
 
-    input {
-      padding: 10px;
-      width: 80%;
-      max-width: 300px;
-      margin-top: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+        }
 
-    .btn {
-      background: #2563eb;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: 0.3s;
-    }
+        header p {
+            margin-top: 8px;
+            color: #cbd5e1;
+        }
 
-    .btn:hover {
-      background: #1d4ed8;
-    }
+        .hero {
+            background: linear-gradient(135deg, #10265c, #2563eb);
+            color: white;
+            padding: 45px 22px;
+            text-align: center;
+        }
 
-    .subjects {
-      display: none;
-      margin-top: 30px;
-    }
+        .hero h1 {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
 
-    .subject-btn {
-      display: block;
-      margin: 10px auto;
-      width: 220px;
-      padding: 12px;
-      background: #0f172a;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+        .hero p {
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
 
-    .subject-btn:hover {
-      background: #1e293b;
-    }
+        .btn {
+            display: inline-block;
+            padding: 13px 22px;
+            margin: 5px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
 
-    .videos {
-      display: none;
-      margin-top: 20px;
-    }
+        .primary {
+            background: #facc15;
 
-    /* Responsive video */
-    .video-wrapper {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      max-width: 800px;
-      margin: auto;
-    }
+        }
 
-    .video-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
+        .secondary {
+            background: white;
+            color: #1d4ed8;
+        }
 
-    .logout {
-      margin-top: 20px;
-      background: #dc2626;
-    }
+        .container {
+            padding: 25px 18px;
+        }
 
-    footer {
-      margin-top: 40px;
-      padding: 15px;
-      background: #1e3a8a;
-      color: white;
-    }
+        .container h2 {
+            margin-bottom: 18px;
+            font-size: 23px;
+        }
 
-    /* WELCOME SCREEN */
-    #welcomeScreen {
-       display: none;
-       position: fixed;
-       inset: 0;
-       background: #0f172a;
-       color: white;
-       z-index: 9999;
-       justify-content: center;
-       align-items: center;
-       flex-direction: column;
-   }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
 
-   #welcomeText {
-     font-size: 28px;
-     animation: ZoomFade 2s ease;
-   }
+        .card {
+            background: white;
+            padding: 22px 12px;
+            border-radius: 13px;
+            text-align: center;
+            box-shadow: 0 3px 12px #0000000d;
+        }
 
-   @keyframes ZoomFade {
-    0% {
-      opacity: 0;
-      transform: scale(0.6);
-   }
-   50% {
-     opacity: 1;
-     transform: scale(1.1);
-  }
-  100% {
-   transform: scale(1);
-  }
- }
+        .icon {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
 
-.lecture-card {
-  position: relative;
-  max-width: 400px;
-  margin: 20px auto;
-  cursor: pointer;
-}
+        .card h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
 
-.lecture-card img {
-  width: 100%;
-  border-radius: 10px;
-}
+        .card p {
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.5;
+        }
 
-.play-btn {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 40px;
-  color: white;
-  background: rgba(0,0,0,0.6);
-  padding: 10px 15px;
-  border-radius: 50%;
-}
-.video-title {
-  margin-top: 12px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #1e293b;
-  background: #e2e8f0;
-  padding: 8px;
-  border-radius: 6px;
-  display: inline-block;
-}
-  </style>
+        .notice {
+            background: #dbeafe;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 22px;
+            line-height: 1.6;
+        }
+
+        footer {
+            background: #10265c;
+            color: white;
+            padding: 22px;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        @media (min-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Priyanshu Classes</h1>
-  <p>SSC CGL Preparation with Concept Clarity</p>
-</header>
+    <header>
+        <div class="logo">🎓 Priyanshu Classes</div>
+        <p>Your Learning, Our Mission</p>
+    </header>
 
-<!-- Welcome Screen -->
-<div id="welcomeScreen">
-  <h1 id="welcomeText">Welcome to Priyanshu Classes</h1>
-  <p>Future Officer 🚀 </p>
-</div>
+    <section class="hero">
+        <h1>Welcome to Priyanshu Classes</h1>
+        <p>
+            Prepare for your dreams with quality education,
+            expert guidance and smart practice.
+        </p>
 
-<div class="container">
+        <a href="register.html" class="btn primary">Start Learning</a>
+        <a href="login.html" class="btn secondary">Student Login</a>
+    </section>
 
-  <h2 id="accessHeading">Enter Access Code</h2>
+    <section class="container" id="courses">
+        <h2>📚 Learning Zone</h2>
 
-  <input type="text" id="codeInput" placeholder="Enter Access Code">
-  <br>
-  <button class="btn" id="unlockBtn" onclick="checkCode()">Unlock</button>
+        <div class="grid">
 
-  <div class="subjects" id="subjects">
-    <h2>Select Subject</h2>
+            <div class="card">
+                <div class="icon">🎥</div>
+                <h3>Video Lectures</h3>
+                <p>Learn through online classes.</p>
+            </div>
 
-    <div class="subject-btn" onclick="showVideos('math')">Maths</div>
-    <div class="subject-btn" onclick="showVideos('english')">English</div>
-    <div class="subject-btn"
-onclick="showVideos('vocab')">English Vocabulary</div>
-    <div class="subject-btn" onclick="showVideos('reasoning')">Reasoning</div>
-    <div class="subject-btn" onclick="showVideos('current')">Current Affairs</div>
-    <div class="subject-btn"
-onclick="showVideos('history')">History</div>
-    <div class="subject-btn"
-onclick="showVideos('polity')">Political Science</div>
-    <div class="subject-btn"
-onclick="showVideos('geo')">Geography</div>
-<div class="subject-btn"
-onclick="showVideos('eco')">Economics</div>
+            <div class="card">
+                <div class="icon">📄</div>
+                <h3>PDF Notes</h3>
+                <p>Study notes anytime.</p>
+            </div>
 
-    <button class="btn logout" onclick="logout()">Logout</button>
-  </div>
+            <div class="card">
+                <div class="icon">📝</div>
+                <h3>Online Tests</h3>
+                <p>Practice questions and check scores.</p>
+            </div>
 
-  <!-- MATHS -->
-  <div class="videos" id="math">
-  <h3>Maths Classes</h3>
+            <div class="card">
+                <div class="icon">📊</div>
+                <h3>My Progress</h3>
+                <p>Track your learning journey.</p>
+            </div>
 
-  <div class="lecture-card" onclick="playVideo('iqP3rZ9gr1Q')">
-    <img src="https://img.youtube.com/vi/iqP3rZ9gr1Q/hqdefault.jpg">
-    <div class="play-btn">▶</div>
-    <p class="video-title">Lecture 1: Introduction to Maths</p>
-  </div>
+            <div class="card">
+                <div class="icon">🏆</div>
+                <h3>SSC Preparation</h3>
+                <p>Prepare for competitive exams.</p>
+            </div>
 
-  <!-- PLAYER (hidden initially) -->
+            <div class="card">
+                <div class="icon">👨‍🏫</div>
+                <h3>Expert Guidance</h3>
+                <p>Learn with a clear study plan.</p>
+            </div>
 
-  <div class="video-wrapper" id="mathPlayer" style="display:none;">
-  <iframe id="mathFrame"
-      src=""
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
-  </div>
+        </div>
 
-</div>
+        <div class="notice">
+            <strong>🌟 Your Success Starts Here!</strong>
+            <br>
+            Learn daily, practise regularly and move
+            closer to your goals.
+        </div>
+    </section>
 
-  <!-- ENGLISH -->
-  <div class="videos" id="english">
-    <h3>English Classes</h3>
-    <div class="video-wrapper">
-      <iframe 
-        src="https://www.youtube.com/embed/eJuc_5pmWkw?rel=0&modestbranding=1"
-        frameborder="0"
-        allow="autoplay; encrypted-media"
-        allowfullscreen>
-      </iframe>
-    </div>
+    <section class="container" id="login">
+        <h2>👋 Student Area</h2>
+        <div class="card">
+            <p>Student login and registration features
+            will be connected in the next development step.</p>
+        </div>
+    </section>
 
-    <!-- TITLE BELOW VIDEO -->
-  <p class="video-title">Lecture 1: Introduction to English</p>
-  </div>
-
-  <!-- VOCAB -->
-<div class="videos" id="vocab">
-  <h3>English Vocabulary</h3>
-  <div class="video-wrapper">
-    <iframe 
-      src="https://www.youtube.com/embed/eJuc_5pmWkw?rel=0&modestbranding=1"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
-  </div>
-  <p class="video-title">Lecture 1: Vocabulary Basics</p>
-</div>
-
-<!-- REASONING -->
-<div class="videos" id="reasoning">
-  <h3>Reasoning Classes</h3>
-  <div class="video-wrapper">
-    <iframe 
-      src="https://www.youtube.com/embed/iqP3rZ9gr1Q?rel=0&modestbranding=1"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
-  </div>
-  <p class="video-title">Lecture 1: Introduction to Reasoning</p>
-</div>
-
-<!-- CURRENT AFFAIRS -->
-<div class="videos" id="current">
-  <h3>Current Affairs</h3>
-  <div class="video-wrapper">
-    <iframe 
-      src="https://www.youtube.com/embed/iqP3rZ9gr1Q?rel=0&modestbranding=1"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
-  </div>
-  <p class="video-title">Lecture 1: Daily Current Affairs</p>
-</div>
-
-<!-- HISTORY -->
-<div class="videos" id="history">
-  <h3>History Classes</h3>
-  <div class="video-wrapper">
-    <iframe 
-      src="https://www.youtube.com/embed/iqP3rZ9gr1Q?rel=0&modestbranding=1"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
-  </div>
-  <p class="video-title">Lecture 1: Ancient History</p>
-</div>
-
-<!-- POLITY -->
-<div class="videos" id="polity">
-  <h3>Political Science</h3>
-  <div class="video-wrapper">
-    <iframe 
-      src="https://www.youtube.com/embed/iqP3rZ9gr1Q?rel=0&modestbranding=1"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
-  </div>
-  <p class="video-title">Lecture 1: Indian Constitution Basics</p>
-</div>
-
-
-<!-- GEOGRAPHY -->
-<div class="videos" id="geo">
-  <h3>Geography Classes</h3>
-  <div class="video-wrapper">
-    <iframe 
-      src="https://www.youtube.com/embed/iqP3rZ9gr1Q?rel=0&modestbranding=1"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
-  </div>
-  <p class="video-title">Lecture 1: Physical Geography</p>
-</div>
-
-<!-- ECONOMICS -->
-<div class="videos" id="eco">
-  <h3>Economics Classes</h3>
-  <div class="video-wrapper">
-    <iframe 
-      src="https://www.youtube.com/embed/iqP3rZ9gr1Q?rel=0&modestbranding=1"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
-  </div>
-  <p class="video-title">Lecture 1: Basics of Economics</p>
-</div>
-</div>
-
-<footer>
-  © 2026 Priyanshu Classes | All Rights Reserved
-</footer>
-
-<script>
-
-window.onload = function() {
-  if(localStorage.getItem("accessGranted") === "true") {
-    unlockAccess();
-  }
-};
-
-function checkCode() {
-  var code = document.getElementById("codeInput").value.trim();
-
-  if(code === "Priyanshu is great") {
-    localStorage.setItem("accessGranted", "true");
-    unlockAccess();
-  } else {
-    alert("Wrong Code!");
-  }
-}
-
-function unlockAccess() {
-  document.getElementById("accessHeading").style.display = "none";
-  document.getElementById("codeInput").style.display = "none";
-  document.getElementById("unlockBtn").style.display = "none";
-
-  const welcome = document.getElementById("welcomeScreen");
-  welcome.style.display = "flex";
-
-  setTimeout(() => {
-    welcome.style.display = "none";
-    document.getElementById("subjects").style.display = "block";
-  }, 2500);
-}
-
-function showVideos(subjectId) {
-  var allVideos = document.getElementsByClassName("videos");
-
-  for (var i = 0; i < allVideos.length; i++) {
-    allVideos[i].style.display = "none";
-  }
-
-  var selected = document.getElementById(subjectId);
-
-  if (selected) {
-    selected.style.display = "block";
-
-    setTimeout(() => {
-      selected.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    }, 100);
-
-  } else {
-    console.log("ID not found:", subjectId);
-  }
-}
-
-function logout() {
-  localStorage.removeItem("accessGranted");
-  location.reload();
-}
-
-function playVideo(videoId) {
-  var player = document.getElementById("mathPlayer");
-var frame = document.getElementById("mathFrame");
-
-  player.style.display = "block";
-
-  frame.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1";
-
-  player.scrollIntoView({
-    behavior: "smooth"
-  });
-}
-
-</script>
+    <footer>
+        <strong>Priyanshu Classes</strong>
+        <br>
+        Learn Today, Lead Tomorrow.
+        <br>
+        © 2026 Priyanshu Classes
+    </footer>
 
 </body>
 </html>
