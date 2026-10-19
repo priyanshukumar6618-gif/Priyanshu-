@@ -194,6 +194,63 @@
   <footer>
     © 2026 Priyanshu Classes | Learn • Practice • Succeed
   </footer>
+<script type="module">
+  import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+  import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+  import {
+    getFirestore,
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB8IW_3JhAhGuVvFwBUoqFKwEFEFZhDr6A",
+    authDomain: "priyanshu-24f9b.firebaseapp.com",
+    projectId: "priyanshu-24f9b",
+    storageBucket: "priyanshu-24f9b.firebasestorage.app",
+    messagingSenderId: "656305585506",
+    appId: "1:656305585506:web:e75d7a29e9add61e67803b",
+    measurementId: "G-PQPWFR9FHY"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.replace("login.html");
+      return;
+    }
+
+    try {
+      const adminRef = doc(db, "admins", user.uid);
+      const adminSnap = await getDoc(adminRef);
+
+      if (!adminSnap.exists() ||
+          adminSnap.data().role !== "admin") {
+        alert("You are not authorized as an admin.");
+        await signOut(auth);
+        window.location.replace("login.html");
+        return;
+      }
+
+      console.log("Admin verified:", user.email);
+    } catch (error) {
+      console.error("Admin verification failed:", error);
+      alert("Admin verification failed. Please check Firebase rules.");
+      await signOut(auth);
+      window.location.replace("login.html");
+    }
+  });
+</script>
 
 </body>
 </html>
