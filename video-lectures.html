@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Lectures | Priyanshu Classes</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f5ff;
+    color: #172554;
+}
+
+header {
+    background: #10265c;
+    color: white;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+header h1 {
+    font-size: 19px;
+}
+
+.back-btn {
+    background: #facc15;
+    color: #172554;
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 950px;
+    margin: auto;
+    padding: 22px 16px;
+}
+
+.hero {
+    background: linear-gradient(135deg, #10265c, #2563eb);
+    color: white;
+    padding: 25px 20px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+}
+
+.hero h2 {
+    margin-bottom: 10px;
+}
+
+.hero p {
+    line-height: 1.6;
+    color: #e0e7ff;
+}
+
+.section-title {
+    margin-bottom: 15px;
+    font-size: 21px;
+}
+
+.subjects {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.subject-btn {
+    background: white;
+    color: #172554;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 18px 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px #10265c0d;
+}
+
+.subject-btn.active {
+    background: #dbeafe;
+    border-color: #2563eb;
+    color: #1d4ed8;
+}
+
+.lecture-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+}
+
+.lecture-card {
+    background: white;
+    padding: 15px;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px #10265c0d;
+}
+
+.lecture-card h3 {
+    margin: 13px 0 8px;
+    font-size: 17px;
+}
+
+.lecture-card p {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.video-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: none;
+    border-radius: 10px;
+    background: #0f172a;
+}
+
+.message {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    line-height: 1.6;
+    color: #475569;
+}
+
+footer {
+    text-align: center;
+    padding: 25px 15px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+@media (min-width: 650px) {
+    .subjects {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .lecture-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🎓 Priyanshu Classes</h1>
+    <a href="dashboard.html" class="back-btn">← Dashboard</a>
+</header>
+
+<main class="container">
+
+    <section class="hero">
+        <h2>🎥 Video Lectures</h2>
+        <p>Choose your subject and learn at your own pace.</p>
+    </section>
+
+    <h2 class="section-title">Choose Your Subject</h2>
+
+    <div class="subjects">
+        <button class="subject-btn active" data-subject="Maths">➗ Maths</button>
+        <button class="subject-btn" data-subject="English">📖 English</button>
+        <button class="subject-btn" data-subject="Reasoning">🧠 Reasoning</button>
+        <button class="subject-btn" data-subject="History">🏛️ History</button>
+        <button class="subject-btn" data-subject="Political science">⚖️ Political Science</button>
+        <button class="subject-btn" data-subject="Economics">📈 Economics</button>
+        <button class="subject-btn" data-subject="Geography">🌍 Geography</button>
+        <button class="subject-btn" data-subject="Science">🔬 Science</button>
+    </div>
+
+    <h2 class="section-title" id="selectedSubject">➗ Maths Lectures</h2>
+
+    <div id="lectureMessage" class="message">
+        Loading lectures...
+    </div>
+
+    <div id="lectureList" class="lecture-list"></div>
+
+</main>
+
+<footer>
+    <strong>Priyanshu Classes</strong><br>
+    Learn Today, Lead Tomorrow.<br>
+    © 2026 Priyanshu Classes
+</footer>
+
+<script type="module">
+
+import { initializeApp, getApps, getApp }
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyB8IW_3JhAhGuVvFwBUoqFKwEFEFZhDr6A",
+    authDomain: "priyanshu-24f9b.firebaseapp.com",
+    projectId: "priyanshu-24f9b",
+    storageBucket: "priyanshu-24f9b.firebasestorage.app",
+    messagingSenderId: "656305585506",
+    appId: "1:656305585506:web:e75d7a29e9add61e67803b",
+    measurementId: "G-PQPWFR9FHY"
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const lectureMessage = document.getElementById("lectureMessage");
+const lectureList = document.getElementById("lectureList");
+const selectedSubject = document.getElementById("selectedSubject");
+const subjectButtons = document.querySelectorAll(".subject-btn");
+
+let allLectures = [];
+let currentSubject = "Maths";
+
+function getYouTubeId(value) {
+    try {
+        const url = new URL(value);
+        let id = "";
+
+        if (url.hostname === "youtu.be" ||
+            url.hostname === "www.youtu.be") {
+            id = url.pathname.split("/").filter(Boolean)[0] || "";
+        } else if (
+            url.hostname === "youtube.com" ||
+            url.hostname === "www.youtube.com" ||
+            url.hostname === "m.youtube.com"
+        ) {
+            if (url.pathname === "/watch") {
+                id = url.searchParams.get("v") || "";
+            } else {
+                const parts = url.pathname.split("/").filter(Boolean);
+
+                if (["embed", "shorts", "live"].includes(parts[0])) {
+                    id = parts[1] || "";
+                }
+            }
+        }
+
+        return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : "";
+    } catch {
+        return "";
+    }
+}
+
+function renderLectures(subject) {
+    currentSubject = subject;
+    selectedSubject.textContent = "🎥 " + subject + " Lectures";
+    lectureList.replaceChildren();
+
+    subjectButtons.forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.subject === subject
+        );
+    });
+
+    const filtered = allLectures.filter(lecture =>
+        (lecture.subject || "").trim().toLowerCase() ===
+        subject.trim().toLowerCase()
+    );
+
+    if (!filtered.length) {
+        lectureMessage.hidden = false;
+        lectureMessage.textContent =
+            "Is subject ke lectures abhi available nahi hain.";
+        return;
+    }
+
+    lectureMessage.hidden = true;
+
+    filtered.forEach(lecture => {
+        const videoId = getYouTubeId(lecture.link || "");
+
+        const card = document.createElement("article");
+        card.className = "lecture-card";
+
+        const title = document.createElement("h3");
+        title.textContent = lecture.title || "Untitled Lecture";
+
+        const subjectText = document.createElement("p");
+        subjectText.textContent = "Subject: " + lecture.subject;
+
+        card.appendChild(title);
+        card.appendChild(subjectText);
+
+        if (videoId) {
+            const player = document.createElement("iframe");
+            player.className = "video-frame";
+            player.src =
+                "https://www.youtube-nocookie.com/embed/" +
+                videoId;
+            player.title = lecture.title || "YouTube lecture";
+            player.loading = "lazy";
+            player.allow =
+                "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+            player.referrerPolicy = "strict-origin-when-cross-origin";
+            player.allowFullscreen = true;
+
+            card.appendChild(player);
+        } else {
+            const error = document.createElement("p");
+            error.textContent = "Is lecture ka YouTube link valid nahi hai.";
+            card.appendChild(error);
+        }
+
+        lectureList.appendChild(card);
+    });
+}
+
+subjectButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        renderLectures(button.dataset.subject);
+    });
+});
+
+onAuthStateChanged(auth, async user => {
+    if (!user) {
+        window.location.replace("login.html");
+        return;
+    }
+
+    lectureMessage.hidden = false;
+    lectureMessage.textContent = "Loading lectures...";
+
+    try {
+        const snapshot = await getDocs(collection(db, "videoLectures"));
+        allLectures = snapshot.docs.map(doc => doc.data());
+        renderLectures(currentSubject);
+    } catch (error) {
+        console.error("Lecture loading error:", error);
+        lectureMessage.hidden = false;
+        lectureMessage.textContent =
+            "Lectures load nahi ho paaye. Please try again.";
+    }
+});
+
+</script>
+
+</body>
+</html>
