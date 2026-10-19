@@ -319,5 +319,56 @@ pdfForm.addEventListener("submit", async (event) => {
 
   <p id="pdfMessage"></p>
   </section>
+<section style="background:white;padding:20px;margin:20px;border-radius:14px;">
+  <h2>🎥 Add Video Lecture</h2>
+
+  <form id="videoForm">
+
+    <label for="videoTitle">Lecture Title</label>
+    <input
+      id="videoTitle"
+      type="text"
+      placeholder="e.g. Percentage Lecture 1"
+      required
+      style="display:block;width:100%;padding:12px;margin:10px 0;box-sizing:border-box;"
+    >
+
+    <label for="videoSubject">Subject</label>
+    <select
+      id="videoSubject"
+      required
+      style="display:block;width:100%;padding:12px;margin:10px 0;box-sizing:border-box;"
+    >
+      <option value="">Select Subject</option>
+      <option>Maths</option>
+      <option>English</option>
+      <option>Reasoning</option>
+      <option>History</option>
+      <option>Political science</option>
+      <option>Economics</option>
+      <option>Geography</option>
+      <option>Science</option>
+    </select>
+
+    <label for="videoLink">YouTube Video Link</label>
+    <input
+      id="videoLink"
+      type="url"
+      placeholder="Paste YouTube video link"
+      required
+      style="display:block;width:100%;padding:12px;margin:10px 0;box-sizing:border-box;"
+    >
+
+    <button
+      type="submit"
+      style="background:#2563eb;color:white;padding:12px 20px;border:0;border-radius:8px;"
+    >
+      Add Lecture
+    </button>
+
+  </form>
+
+  <p id="videoMessage" role="status" style="margin-top:12px;"></p>
+</section>
 </body>
 </html>
