@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Notes | Priyanshu Classes</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f5ff;
+    color: #172554;
+}
+
+header {
+    background: #10265c;
+    color: white;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+header h1 {
+    font-size: 20px;
+}
+
+.back-btn {
+    color: #172554;
+    background: #facc15;
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 22px 16px;
+}
+
+.intro {
+    background: linear-gradient(135deg, #10265c, #2563eb);
+    color: white;
+    padding: 25px 20px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+}
+
+.intro h2 {
+    margin-bottom: 10px;
+}
+
+.intro p {
+    line-height: 1.6;
+    color: #e0e7ff;
+}
+
+h2.section-title {
+    margin-bottom: 15px;
+    font-size: 21px;
+}
+
+.subjects {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.subject-btn {
+    border: 2px solid transparent;
+    background: white;
+    color: #172554;
+    border-radius: 12px;
+    padding: 18px 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px #10265c0d;
+}
+
+.subject-btn.active {
+    background: #dbeafe;
+    border-color: #2563eb;
+    color: #1d4ed8;
+}
+
+.notes-list {
+    display: grid;
+    gap: 14px;
+}
+
+.note-card {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px #10265c0d;
+}
+
+.note-card h3 {
+    margin-bottom: 8px;
+}
+
+.note-card p {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 14px;
+}
+
+.open-pdf {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.message {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    line-height: 1.6;
+    color: #475569;
+}
+
+footer {
+    text-align: center;
+    padding: 25px 15px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+@media (min-width: 600px) {
+    .subjects {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🎓 Priyanshu Classes</h1>
+    <a href="dashboard.html" class="back-btn">← Dashboard</a>
+</header>
+
+<main class="container">
+
+    <section class="intro">
+        <h2>📚 PDF Study Notes</h2>
+        <p>Apna subject select karein aur uske study notes dekhein.</p>
+    </section>
+
+    <h2 class="section-title">Choose Your Subject</h2>
+
+    <div class="subjects">
+        <button class="subject-btn active" data-subject="Maths">📘 Maths</button>
+        <button class="subject-btn" data-subject="Reasoning">🧠 Reasoning</button>
+        <button class="subject-btn" data-subject="English">📖 English</button>
+        <button class="subject-btn" data-subject="GK/GS">🌍 GK/GS</button>
+        <button class="subject-btn" data-subject="Economics">📈 Economics</button>
+    </div>
+
+    <h2 class="section-title" id="selectedSubject">📘 Maths Notes</h2>
+
+    <div id="notesMessage" class="message">Loading notes...</div>
+    <div id="notesList" class="notes-list"></div>
+
+</main>
+
+<footer>
+    <strong>Priyanshu Classes</strong><br>
+    Learn Today, Lead Tomorrow.<br>
+    © 2026 Priyanshu Classes
+</footer>
+
+<script type="module">
+
+import { initializeApp, getApps, getApp }
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyB8IW_3JhAhGuVvFwBUoqFKwEFEFZhDr6A",
+    authDomain: "priyanshu-24f9b.firebaseapp.com",
+    projectId: "priyanshu-24f9b",
+    storageBucket: "priyanshu-24f9b.firebasestorage.app",
+    messagingSenderId: "656305585506",
+    appId: "1:656305585506:web:e75d7a29e9add61e67803b",
+    measurementId: "G-PQPWFR9FHY"
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const notesMessage = document.getElementById("notesMessage");
+const notesList = document.getElementById("notesList");
+const selectedSubject = document.getElementById("selectedSubject");
+const subjectButtons = document.querySelectorAll(".subject-btn");
+
+let allNotes = [];
+let currentSubject = "Maths";
+
+function renderNotes(subject) {
+    currentSubject = subject;
+
+    selectedSubject.textContent = "📚 " + subject + " Notes";
+    notesList.replaceChildren();
+
+    subjectButtons.forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.subject === subject
+        );
+    });
+
+    const filteredNotes = allNotes.filter(note =>
+        (note.subject || "").trim().toLowerCase() ===
+        subject.trim().toLowerCase()
+    );
+
+    if (filteredNotes.length === 0) {
+        notesMessage.hidden = false;
+        notesMessage.textContent =
+            "Is subject ke notes abhi available nahi hain.";
+        return;
+    }
+
+    notesMessage.hidden = true;
+
+    filteredNotes.forEach(note => {
+        const card = document.createElement("article");
+        card.className = "note-card";
+
+        const title = document.createElement("h3");
+        title.textContent = note.title || "Untitled Notes";
+
+        const subjectText = document.createElement("p");
+        subjectText.textContent = "Subject: " + note.subject;
+
+        const link = document.createElement("a");
+        link.className = "open-pdf";
+        link.href = note.link;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "📄 Open PDF";
+
+        card.append(title, subjectText, link);
+        notesList.appendChild(card);
+    });
+}
+
+subjectButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        renderNotes(button.dataset.subject);
+    });
+});
+
+onAuthStateChanged(auth, async user => {
+    if (!user) {
+        window.location.replace("login.html");
+        return;
+    }
+
+    notesMessage.hidden = false;
+    notesMessage.textContent = "Loading notes...";
+
+    try {
+        const snapshot = await getDocs(collection(db, "pdfNotes"));
+
+        allNotes = snapshot.docs.map(doc => doc.data());
+
+        renderNotes(currentSubject);
+
+    } catch (error) {
+        console.error("PDF notes error:", error);
+        notesMessage.hidden = false;
+        notesMessage.textContent =
+            "Notes load nahi ho paaye. Internet connection check karein.";
+    }
+});
+
+</script>
+
+</body>
+</html>
