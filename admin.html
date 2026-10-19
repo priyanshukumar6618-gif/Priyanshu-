@@ -1,431 +1,653 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard | Priyanshu Classes</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+<title>Admin Dashboard | Priyanshu Classes</title>
 
-    body {
-      background: #f1f5f9;
-      color: #1e293b;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    header {
-      background: #172554;
-      color: white;
-      padding: 20px;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+  color: #1e293b;
+}
 
-    header h1 {
-      font-size: 22px;
-      margin-bottom: 6px;
-    }
+header {
+  background: #172554;
+  color: white;
+  padding: 20px;
+}
 
-    header p {
-      color: #cbd5e1;
-      font-size: 14px;
-    }
+header h1 {
+  margin: 0 0 8px;
+  font-size: 23px;
+}
 
-    .container {
-      padding: 20px;
-      max-width: 900px;
-      margin: auto;
-    }
+header p {
+  margin: 0;
+  color: #cbd5e1;
+}
 
-    .welcome {
-      margin-bottom: 22px;
-    }
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 16px;
+}
 
-    .welcome h2 {
-      font-size: 23px;
-      margin-bottom: 8px;
-    }
+.panel {
+  background: white;
+  padding: 18px;
+  margin: 18px 0;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px #0000000c;
+}
 
-    .welcome p {
-      color: #64748b;
-      line-height: 1.5;
-    }
+h2 {
+  font-size: 20px;
+  margin-top: 0;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-      gap: 15px;
-    }
+input, select {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 9px 0 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  background: white;
+}
 
-    .card {
-      background: white;
-      padding: 20px 15px;
-      border-radius: 14px;
-      box-shadow: 0 3px 12px #0000000c;
-      border: 1px solid #e2e8f0;
-    }
+button {
+  padding: 11px 15px;
+  border: 0;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 3px;
+}
 
-    .icon {
-      font-size: 30px;
-      margin-bottom: 12px;
-    }
+.primary {
+  background: #2563eb;
+}
 
-    .card h3 {
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
+.edit {
+  background: #d97706;
+}
 
-    .card p {
-      font-size: 13px;
-      color: #64748b;
-      line-height: 1.5;
-    }
+.delete {
+  background: #dc2626;
+}
 
-    .badge {
-      display: inline-block;
-      background: #fef3c7;
-      color: #92400e;
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      margin-top: 12px;
-    }
+.cancel {
+  background: #64748b;
+}
 
-    .notice {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      padding: 15px;
-      border-radius: 12px;
-      margin-top: 22px;
-      font-size: 14px;
-      line-height: 1.6;
-    }
+.item {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+}
 
-    .back {
-      display: inline-block;
-      margin-top: 20px;
-      color: #1d4ed8;
-      text-decoration: none;
-      font-weight: bold;
-    }
+.item h3 {
+  margin: 0 0 8px;
+}
 
-    footer {
-      text-align: center;
-      padding: 22px;
-      color: #64748b;
-      font-size: 13px;
-    }
-  </style>
+.item p {
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.message {
+  margin-top: 12px;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.muted {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.hidden {
+  display: none;
+}
+
+a {
+  overflow-wrap: anywhere;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #64748b;
+  font-size: 13px;
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <h1>🎓 Priyanshu Classes</h1>
-    <p>Administrator Dashboard</p>
-  </header>
+<header>
+  <h1>🎓 Priyanshu Classes</h1>
+  <p>Admin Dashboard — Manage Notes & Lectures</p>
+</header>
 
-  <main class="container">
+<main class="container">
 
-    <section class="welcome">
-      <h2>Welcome, Admin 👋</h2>
-      <p>Manage your educational platform from one place.</p>
-    </section>
+  <section class="panel">
+    <h2>👋 Welcome, Admin</h2>
+    <p id="adminStatus" class="muted">Verifying admin access...</p>
+    <button id="logoutBtn" class="cancel hidden" type="button">
+      Logout
+    </button>
+  </section>
 
-    <section class="grid">
+  <section class="panel">
+    <h2>📚 Add / Edit PDF Notes</h2>
 
-      <div class="card">
-        <div class="icon">🎥</div>
-        <h3>Video Lectures</h3>
-        <p>Manage subject-wise lectures and video links.</p>
-        <span class="badge">Setup pending</span>
-      </div>
+    <form id="pdfForm">
+      <input id="pdfTitle" type="text"
+        placeholder="PDF title" required>
 
-      <div class="card">
-        <div class="icon">📚</div>
-        <h3>PDF Notes</h3>
-        <p>Organize study materials and chapter-wise PDFs.</p>
-        <span class="badge">Setup pending</span>
-      </div>
+      <select id="pdfSubject" required>
+        <option value="">Select Subject</option>
+        <option>Maths</option>
+        <option>Reasoning</option>
+        <option>English</option>
+        <option>GK/GS</option>
+        <option>Economics</option>
+      </select>
 
-      <div class="card">
-        <div class="icon">📝</div>
-        <h3>Online Tests</h3>
-        <p>Prepare mock tests and practice questions.</p>
-        <span class="badge">Setup pending</span>
-      </div>
+      <input id="pdfLink" type="url"
+        placeholder="Google Drive PDF sharing link" required>
 
-      <div class="card">
-        <div class="icon">👨‍🎓</div>
-        <h3>Students</h3>
-        <p>Build a system to manage registered students.</p>
-        <span class="badge">Setup pending</span>
-      </div>
+      <button id="pdfSubmit" class="primary" type="submit">
+        Add PDF Notes
+      </button>
 
-      <div class="card">
-        <div class="icon">📊</div>
-        <h3>Student Progress</h3>
-        <p>View test scores and learning progress.</p>
-        <span class="badge">Setup pending</span>
-      </div>
+      <button id="pdfCancel" class="cancel hidden"
+        type="button">
+        Cancel Edit
+      </button>
+    </form>
 
-      <div class="card">
-        <div class="icon">⚙️</div>
-        <h3>Platform Settings</h3>
-        <p>Configure courses and platform settings.</p>
-        <span class="badge">Setup pending</span>
-      </div>
+    <p id="pdfMessage" class="message" role="status"></p>
+  </section>
 
-    </section>
+  <section class="panel">
+    <h2>🎥 Add / Edit Video Lecture</h2>
 
-    <div class="notice">
-      <strong>Important:</strong> This is currently the dashboard design.
-      The cards do not upload files or manage students yet.
-      We will connect them to Firebase after setting up secure admin access.
-    </div>
+    <form id="videoForm">
+      <input id="videoTitle" type="text"
+        placeholder="Lecture title" required>
 
-    <a class="back" href="dashboard.html">← Back to Student Dashboard</a>
+      <select id="videoSubject" required>
+        <option value="">Select Subject</option>
+        <option>Maths</option>
+        <option>English</option>
+        <option>Reasoning</option>
+        <option>History</option>
+        <option>Political science</option>
+        <option>Economics</option>
+        <option>Geography</option>
+        <option>Science</option>
+      </select>
 
-  </main>
+      <input id="videoLink" type="url"
+        placeholder="YouTube video link" required>
 
-  <footer>
-    © 2026 Priyanshu Classes | Learn • Practice • Succeed
-  </footer>
+      <button id="videoSubmit" class="primary" type="submit">
+        Add Lecture
+      </button>
 
-  <script type="module">
-  import { initializeApp }
-    from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+      <button id="videoCancel" class="cancel hidden"
+        type="button">
+        Cancel Edit
+      </button>
+    </form>
 
-  import {
-    getAuth,
-    onAuthStateChanged,
-    signOut
-  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    <p id="videoMessage" class="message" role="status"></p>
+  </section>
 
-  import {
-    getFirestore,
-    doc,
-    getDoc,
-    collection,
-    addDoc,
-    serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+  <section class="panel">
+    <h2>📄 Manage PDF Notes</h2>
+    <p class="muted">Edit details or delete an uploaded PDF.</p>
+    <div id="pdfList">Loading PDF notes...</div>
+  </section>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyB8IW_3JhAhGuVvFwBUoqFKwEFEFZhDr6A",
-    authDomain: "priyanshu-24f9b.firebaseapp.com",
-    projectId: "priyanshu-24f9b",
-    storageBucket: "priyanshu-24f9b.firebasestorage.app",
-    messagingSenderId: "656305585506",
-    appId: "1:656305585506:web:e75d7a29e9add61e67803b",
-    measurementId: "G-PQPWFR9FHY"
-  };
+  <section class="panel">
+    <h2>🎬 Manage Video Lectures</h2>
+    <p class="muted">Edit details or delete an uploaded lecture.</p>
+    <div id="videoList">Loading video lectures...</div>
+  </section>
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+  <p>
+    <a href="dashboard.html">← Back to Student Dashboard</a>
+  </p>
 
-const videoForm = document.getElementById("videoForm");
-const videoMessage = document.getElementById("videoMessage");
+</main>
 
-videoForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
+<footer>
+  © 2026 Priyanshu Classes
+</footer>
 
-  const title = document.getElementById("videoTitle").value.trim();
-  const subject = document.getElementById("videoSubject").value;
-  const link = document.getElementById("videoLink").value.trim();
+<script type="module">
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 
-  // YouTube link se video ID check karo
-  let videoId = "";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut
+} from
+  "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+} from
+  "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8IW_3JhAhGuVvFwBUoqFKwEFEFZhDr6A",
+  authDomain: "priyanshu-24f9b.firebaseapp.com",
+  projectId: "priyanshu-24f9b",
+  storageBucket: "priyanshu-24f9b.firebasestorage.app",
+  messagingSenderId: "656305585506",
+  appId: "1:656305585506:web:e75d7a29e9add61e67803b",
+  measurementId: "G-PQPWFR9FHY"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let isAdmin = false;
+let editingPdfId = null;
+let editingVideoId = null;
+
+const $ = id => document.getElementById(id);
+
+const pdfForm = $("pdfForm");
+const videoForm = $("videoForm");
+
+const pdfMessage = $("pdfMessage");
+const videoMessage = $("videoMessage");
+
+const pdfList = $("pdfList");
+const videoList = $("videoList");
+
+const pdfCollection = collection(db, "pdfNotes");
+const videoCollection = collection(db, "videoLectures");
+
+
+function validYouTubeId(link) {
   try {
     const url = new URL(link);
+    let id = "";
 
     if (url.hostname === "youtu.be") {
-      videoId = url.pathname.split("/").filter(Boolean)[0] || "";
+      id = url.pathname.split("/").filter(Boolean)[0] || "";
     } else if (
-      ["youtube.com", "www.youtube.com", "m.youtube.com"].includes(url.hostname)
+      ["youtube.com", "www.youtube.com", "m.youtube.com"].includes(
+        url.hostname
+      )
     ) {
       if (url.pathname === "/watch") {
-        videoId = url.searchParams.get("v") || "";
+        id = url.searchParams.get("v") || "";
       } else {
         const parts = url.pathname.split("/").filter(Boolean);
 
         if (["embed", "shorts", "live"].includes(parts[0])) {
-          videoId = parts[1] || "";
+          id = parts[1] || "";
         }
       }
     }
-  } catch {
-    videoId = "";
-  }
 
-  if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
-    videoMessage.textContent = "Valid YouTube video link paste karo.";
+    return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : "";
+  } catch {
+    return "";
+  }
+}
+
+
+function makeButton(label, className, callback) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = label;
+  button.className = className;
+  button.addEventListener("click", callback);
+  return button;
+}
+
+
+function showMessage(element, message, isError = false) {
+  element.textContent = message;
+  element.style.color = isError ? "#dc2626" : "#15803d";
+}
+
+
+async function loadPdfNotes() {
+  pdfList.replaceChildren();
+
+  try {
+    const snapshot = await getDocs(pdfCollection);
+
+    if (snapshot.empty) {
+      pdfList.textContent = "Abhi koi PDF Notes upload nahi hui hai.";
+      return;
+    }
+
+    snapshot.forEach(documentSnapshot => {
+      const data = documentSnapshot.data();
+      const id = documentSnapshot.id;
+
+      const item = document.createElement("div");
+      item.className = "item";
+
+      const title = document.createElement("h3");
+      title.textContent = data.title || "Untitled PDF";
+
+      const subject = document.createElement("p");
+      subject.textContent = "Subject: " + (data.subject || "");
+
+      const link = document.createElement("a");
+      link.href = data.link || "#";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Open PDF";
+
+      const actions = document.createElement("div");
+      actions.style.marginTop = "10px";
+
+      actions.append(
+        makeButton("✏️ Edit", "edit", () => {
+          editingPdfId = id;
+          $("pdfTitle").value = data.title || "";
+          $("pdfSubject").value = data.subject || "";
+          $("pdfLink").value = data.link || "";
+          $("pdfSubmit").textContent = "Save PDF Changes";
+          $("pdfCancel").classList.remove("hidden");
+          pdfForm.scrollIntoView({ behavior: "smooth" });
+        }),
+
+        makeButton("🗑️ Delete", "delete", async () => {
+          if (!confirm(
+            'Delete PDF "' + (data.title || "Untitled PDF") + '"?'
+          )) return;
+
+          try {
+            await deleteDoc(doc(db, "pdfNotes", id));
+            showMessage(pdfMessage, "PDF Notes deleted.");
+            await loadPdfNotes();
+          } catch (error) {
+            console.error(error);
+            showMessage(pdfMessage, "Delete failed: " + error.message, true);
+          }
+        })
+      );
+
+      item.append(title, subject, link, actions);
+      pdfList.appendChild(item);
+    });
+  } catch (error) {
+    console.error("PDF list error:", error);
+    pdfList.textContent = "PDF load nahi hui: " + error.message;
+  }
+}
+
+
+async function loadVideoLectures() {
+  videoList.replaceChildren();
+
+  try {
+    const snapshot = await getDocs(videoCollection);
+
+    if (snapshot.empty) {
+      videoList.textContent = "Abhi koi video lecture upload nahi hua hai.";
+      return;
+    }
+
+    snapshot.forEach(documentSnapshot => {
+      const data = documentSnapshot.data();
+      const id = documentSnapshot.id;
+
+      const item = document.createElement("div");
+      item.className = "item";
+
+      const title = document.createElement("h3");
+      title.textContent = data.title || "Untitled Lecture";
+
+      const subject = document.createElement("p");
+      subject.textContent = "Subject: " + (data.subject || "");
+
+      const link = document.createElement("a");
+      link.href = data.link || "#";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Open YouTube Link";
+
+      const actions = document.createElement("div");
+      actions.style.marginTop = "10px";
+
+      actions.append(
+        makeButton("✏️ Edit", "edit", () => {
+          editingVideoId = id;
+          $("videoTitle").value = data.title || "";
+          $("videoSubject").value = data.subject || "";
+          $("videoLink").value = data.link || "";
+          $("videoSubmit").textContent = "Save Lecture Changes";
+          $("videoCancel").classList.remove("hidden");
+          videoForm.scrollIntoView({ behavior: "smooth" });
+        }),
+
+        makeButton("🗑️ Delete", "delete", async () => {
+          if (!confirm(
+            'Delete lecture "' + (data.title || "Untitled Lecture") + '"?'
+          )) return;
+
+          try {
+            await deleteDoc(doc(db, "videoLectures", id));
+            showMessage(videoMessage, "Video lecture deleted.");
+            await loadVideoLectures();
+          } catch (error) {
+            console.error(error);
+            showMessage(
+              videoMessage,
+              "Delete failed: " + error.message,
+              true
+            );
+          }
+        })
+      );
+
+      item.append(title, subject, link, actions);
+      videoList.appendChild(item);
+    });
+  } catch (error) {
+    console.error("Video list error:", error);
+    videoList.textContent = "Videos load nahi hue: " + error.message;
+  }
+}
+
+
+function resetPdfForm() {
+  editingPdfId = null;
+  pdfForm.reset();
+  $("pdfSubmit").textContent = "Add PDF Notes";
+  $("pdfCancel").classList.add("hidden");
+}
+
+
+function resetVideoForm() {
+  editingVideoId = null;
+  videoForm.reset();
+  $("videoSubmit").textContent = "Add Lecture";
+  $("videoCancel").classList.add("hidden");
+}
+
+
+$("pdfCancel").addEventListener("click", resetPdfForm);
+$("videoCancel").addEventListener("click", resetVideoForm);
+
+
+pdfForm.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!isAdmin) {
+    showMessage(pdfMessage, "Admin verification pending.", true);
     return;
   }
 
-  videoMessage.textContent = "Saving lecture...";
+  const title = $("pdfTitle").value.trim();
+  const subject = $("pdfSubject").value;
+  const link = $("pdfLink").value.trim();
+
+  if (!title || !subject || !link) {
+    showMessage(pdfMessage, "Sabhi fields bharo.", true);
+    return;
+  }
+
+  $("pdfSubmit").disabled = true;
 
   try {
-    await addDoc(collection(db, "videoLectures"), {
+    const data = {
       title,
       subject,
-      link,
-      createdAt: serverTimestamp()
-    });
+      link
+    };
 
-    videoMessage.textContent = "Lecture added successfully!";
-    videoForm.reset();
+    if (editingPdfId) {
+      await updateDoc(doc(db, "pdfNotes", editingPdfId), data);
+      showMessage(pdfMessage, "PDF Notes updated successfully.");
+    } else {
+      await addDoc(pdfCollection, {
+        ...data,
+        createdAt: serverTimestamp()
+      });
+      showMessage(pdfMessage, "PDF Notes added successfully.");
+    }
+
+    resetPdfForm();
+    await loadPdfNotes();
   } catch (error) {
-    console.error("Video save error:", error);
-    videoMessage.textContent = "Error: " + error.message;
+    console.error(error);
+    showMessage(pdfMessage, "Save failed: " + error.message, true);
+  } finally {
+    $("pdfSubmit").disabled = false;
   }
 });
-    const pdfForm = document.getElementById("pdfForm");
-const pdfMessage = document.getElementById("pdfMessage");
 
-pdfForm.addEventListener("submit", async (event) => {
+
+videoForm.addEventListener("submit", async event => {
   event.preventDefault();
 
-  const title = document.getElementById("pdfTitle").value.trim();
-  const subject = document.getElementById("pdfSubject").value;
-  const link = document.getElementById("pdfLink").value.trim();
+  if (!isAdmin) {
+    showMessage(videoMessage, "Admin verification pending.", true);
+    return;
+  }
 
-  pdfMessage.textContent = "Saving notes...";
+  const title = $("videoTitle").value.trim();
+  const subject = $("videoSubject").value;
+  const link = $("videoLink").value.trim();
+
+  if (!validYouTubeId(link)) {
+    showMessage(videoMessage, "Valid YouTube video link paste karo.", true);
+    return;
+  }
+
+  $("videoSubmit").disabled = true;
 
   try {
-    await addDoc(collection(db, "pdfNotes"), {
-      title: title,
-      subject: subject,
-      link: link,
-      createdAt: serverTimestamp()
-    });
+    const data = {
+      title,
+      subject,
+      link
+    };
 
-    pdfMessage.textContent = "PDF notes saved successfully!";
+    if (editingVideoId) {
+      await updateDoc(doc(db, "videoLectures", editingVideoId), data);
+      showMessage(videoMessage, "Video lecture updated successfully.");
+    } else {
+      await addDoc(videoCollection, {
+        ...data,
+        createdAt: serverTimestamp()
+      });
+      showMessage(videoMessage, "Video lecture added successfully.");
+    }
 
-    pdfForm.reset();
+    resetVideoForm();
+    await loadVideoLectures();
   } catch (error) {
-    console.error("PDF save error:", error);
-    pdfMessage.textContent = "Error: " + error.message;
+    console.error(error);
+    showMessage(videoMessage, "Save failed: " + error.message, true);
+  } finally {
+    $("videoSubmit").disabled = false;
   }
 });
 
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
+
+$("logoutBtn").addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.replace("login.html");
+});
+
+
+onAuthStateChanged(auth, async user => {
+  isAdmin = false;
+
+  if (!user) {
+    window.location.replace("login.html");
+    return;
+  }
+
+  try {
+    const adminSnap = await getDoc(doc(db, "admins", user.uid));
+
+    if (!adminSnap.exists() || adminSnap.data().role !== "admin") {
+      alert("You are not authorized as an admin.");
+      await signOut(auth);
       window.location.replace("login.html");
       return;
     }
 
-    try {
-      const adminRef = doc(db, "admins", user.uid);
-      const adminSnap = await getDoc(adminRef);
+    isAdmin = true;
 
-      if (!adminSnap.exists() ||
-          adminSnap.data().role !== "admin") {
-        alert("You are not authorized as an admin.");
-        await signOut(auth);
-        window.location.replace("login.html");
-        return;
-      }
+    $("adminStatus").textContent = "Admin verified: " + user.email;
+    $("logoutBtn").classList.remove("hidden");
 
-      console.log("Admin verified:", user.email);
-    } catch (error) {
-      console.error("Admin verification failed:", error);
-      alert("Admin verification failed. Please check Firebase rules.");
-      await signOut(auth);
-      window.location.replace("login.html");
-    }
-  });
-  </script>
-  <section style="background:#fff;padding:20px;margin:20px;border-radius:12px;">
-  <h2>📚 Add PDF Notes</h2>
+    await Promise.all([
+      loadPdfNotes(),
+      loadVideoLectures()
+    ]);
 
-  <form id="pdfForm">
-    <label>PDF Title</label>
-    <input id="pdfTitle" type="text"
-      placeholder="e.g. Percentage Notes"
-      required
-      style="display:block;width:100%;padding:12px;margin:10px 0;box-sizing:border-box;">
+  } catch (error) {
+    console.error("Admin verification failed:", error);
+    alert("Admin verification failed. Check Firebase rules.");
+    await signOut(auth);
+    window.location.replace("login.html");
+  }
+});
+</script>
 
-    <label>Subject</label>
-    <select id="pdfSubject" required
-      style="display:block;width:100%;padding:12px;margin:10px 0;">
-      <option value="">Select Subject</option>
-      <option>Maths</option>
-      <option>Reasoning</option>
-      <option>English</option>
-      <option>GK/GS</option>
-      <option>Economics</option>
-    </select>
-
-    <label>Google Drive PDF Link</label>
-    <input id="pdfLink" type="url"
-      placeholder="Paste PDF sharing link"
-      required
-      style="display:block;width:100%;padding:12px;margin:10px 0;box-sizing:border-box;">
-
-    <button type="submit"
-      style="background:#2563eb;color:white;padding:12px 20px;border:0;border-radius:8px;">
-      Add Notes
-    </button>
-  </form>
-
-  <p id="pdfMessage"></p>
-  </section>
-<section style="background:white;padding:20px;margin:20px;border-radius:14px;">
-  <h2>🎥 Add Video Lecture</h2>
-
-  <form id="videoForm">
-
-    <label for="videoTitle">Lecture Title</label>
-    <input
-      id="videoTitle"
-      type="text"
-      placeholder="e.g. Percentage Lecture 1"
-      required
-      style="display:block;width:100%;padding:12px;margin:10px 0;box-sizing:border-box;"
-    >
-
-    <label for="videoSubject">Subject</label>
-    <select
-      id="videoSubject"
-      required
-      style="display:block;width:100%;padding:12px;margin:10px 0;box-sizing:border-box;"
-    >
-      <option value="">Select Subject</option>
-      <option>Maths</option>
-      <option>English</option>
-      <option>Reasoning</option>
-      <option>History</option>
-      <option>Political science</option>
-      <option>Economics</option>
-      <option>Geography</option>
-      <option>Science</option>
-    </select>
-
-    <label for="videoLink">YouTube Video Link</label>
-    <input
-      id="videoLink"
-      type="url"
-      placeholder="Paste YouTube video link"
-      required
-      style="display:block;width:100%;padding:12px;margin:10px 0;box-sizing:border-box;"
-    >
-
-    <button
-      type="submit"
-      style="background:#2563eb;color:white;padding:12px 20px;border:0;border-radius:8px;"
-    >
-      Add Lecture
-    </button>
-
-  </form>
-
-  <p id="videoMessage" role="status" style="margin-top:12px;"></p>
-</section>
 </body>
 </html>
