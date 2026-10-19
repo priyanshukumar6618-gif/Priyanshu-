@@ -228,6 +228,63 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
+const videoForm = document.getElementById("videoForm");
+const videoMessage = document.getElementById("videoMessage");
+
+videoForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const title = document.getElementById("videoTitle").value.trim();
+  const subject = document.getElementById("videoSubject").value;
+  const link = document.getElementById("videoLink").value.trim();
+
+  // YouTube link se video ID check karo
+  let videoId = "";
+
+  try {
+    const url = new URL(link);
+
+    if (url.hostname === "youtu.be") {
+      videoId = url.pathname.split("/").filter(Boolean)[0] || "";
+    } else if (
+      ["youtube.com", "www.youtube.com", "m.youtube.com"].includes(url.hostname)
+    ) {
+      if (url.pathname === "/watch") {
+        videoId = url.searchParams.get("v") || "";
+      } else {
+        const parts = url.pathname.split("/").filter(Boolean);
+
+        if (["embed", "shorts", "live"].includes(parts[0])) {
+          videoId = parts[1] || "";
+        }
+      }
+    }
+  } catch {
+    videoId = "";
+  }
+
+  if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
+    videoMessage.textContent = "Valid YouTube video link paste karo.";
+    return;
+  }
+
+  videoMessage.textContent = "Saving lecture...";
+
+  try {
+    await addDoc(collection(db, "videoLectures"), {
+      title,
+      subject,
+      link,
+      createdAt: serverTimestamp()
+    });
+
+    videoMessage.textContent = "Lecture added successfully!";
+    videoForm.reset();
+  } catch (error) {
+    console.error("Video save error:", error);
+    videoMessage.textContent = "Error: " + error.message;
+  }
+});
     const pdfForm = document.getElementById("pdfForm");
 const pdfMessage = document.getElementById("pdfMessage");
 
