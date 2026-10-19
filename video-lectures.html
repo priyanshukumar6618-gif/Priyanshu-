@@ -305,21 +305,64 @@ function renderLectures(subject) {
         card.appendChild(title);
         card.appendChild(subjectText);
 
-        if (videoId) {
-            const player = document.createElement("iframe");
-            player.className = "video-frame";
-            player.src =
-                "https://www.youtube-nocookie.com/embed/" +
-                videoId;
-            player.title = lecture.title || "YouTube lecture";
-            player.loading = "lazy";
-            player.allow =
-                "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-            player.referrerPolicy = "strict-origin-when-cross-origin";
-            player.allowFullscreen = true;
+       if (videoId) {
+    const videoBox = document.createElement("div");
+    videoBox.className = "video-protected";
 
-            card.appendChild(player);
-        } else {
+    videoBox.style.position = "relative";
+    videoBox.style.width = "100%";
+    videoBox.style.aspectRatio = "16 / 9";
+    videoBox.style.overflow = "hidden";
+    videoBox.style.borderRadius = "12px";
+    videoBox.style.background = "#000";
+
+    const player = document.createElement("iframe");
+
+    player.className = "video-frame";
+    player.src =
+        "https://www.youtube-nocookie.com/embed/" +
+        videoId +
+        "?rel=0&modestbranding=1";
+
+    player.title = lecture.title || "Video lecture";
+    player.loading = "lazy";
+    player.style.width = "100%";
+    player.style.height = "100%";
+    player.style.position = "absolute";
+    player.style.inset = "0";
+    player.style.border = "0";
+
+    player.setAttribute(
+        "allow",
+        "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+    );
+
+    player.setAttribute(
+        "referrerpolicy",
+        "strict-origin-when-cross-origin"
+    );
+
+    player.allowFullscreen = true;
+
+    // Video ke upar protective layer
+    const protection = document.createElement("div");
+
+    protection.style.position = "absolute";
+    protection.style.inset = "0";
+    protection.style.zIndex = "2";
+    protection.style.pointerEvents = "none";
+    protection.style.background = "transparent";
+
+    // Right-click disable
+    videoBox.addEventListener("contextmenu", function(event) {
+        event.preventDefault();
+    });
+
+    videoBox.appendChild(player);
+    videoBox.appendChild(protection);
+
+    card.appendChild(videoBox);
+} else {
             const error = document.createElement("p");
             error.textContent = "Is lecture ka YouTube link valid nahi hai.";
             card.appendChild(error);
