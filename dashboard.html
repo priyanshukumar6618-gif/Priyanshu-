@@ -248,6 +248,7 @@ onAuthStateChanged(auth, (user) => {
 
         statusMessage.textContent =
             "You are logged in successfully. Your learning resources will be available here as they are added.";
+loadPdfNotes();
 
     } else {
         window.location.replace("login.html");
@@ -267,6 +268,47 @@ logoutButton.addEventListener("click", async () => {
     }
 });
 
+async function loadPdfNotes() {
+  const notesList = document.getElementById("pdfNotesList");
+
+  if (!notesList) return;
+
+  notesList.textContent = "Loading notes...";
+
+  try {
+    const snapshot = await getDocs(collection(db, "pdfNotes"));
+
+    notesList.innerHTML = "";
+
+    if (snapshot.empty) {
+      notesList.textContent = "Abhi koi PDF notes available nahi hain.";
+      return;
+    }
+
+    snapshot.forEach((noteDoc) => {
+      const note = noteDoc.data();
+
+      const card = document.createElement("div");
+      const title = document.createElement("h3");
+      const subject = document.createElement("p");
+      const link = document.createElement("a");
+
+      card.style.cssText = "background:white;padding:16px;margin:12px 0;border-radius:12px;";
+      title.textContent = note.title || "Untitled Notes";
+      subject.textContent = "Subject: " + (note.subject || "General");
+      link.href = note.link;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "📄 Open PDF";
+
+      card.append(title, subject, link);
+      notesList.appendChild(card);
+    });
+  } catch (error) {
+    console.error("PDF loading error:", error);
+    notesList.textContent = "Notes load nahi ho paaye.";
+  }
+}
 </script>
 
 <section id="pdfNotesSection" style="padding:20px;">
