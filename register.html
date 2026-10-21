@@ -233,6 +233,13 @@ import {
   updateProfile
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyB8IW_3JhAhGuVvFwBUoqFKwEFEFZhDr6A",
   authDomain: "priyanshu-24f9b.firebaseapp.com",
@@ -245,6 +252,7 @@ const firebaseConfig = {
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 const form = document.getElementById("registerForm");
 const password = document.getElementById("password");
