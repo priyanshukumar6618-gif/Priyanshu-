@@ -218,6 +218,7 @@ onAuthStateChanged(auth, async user => {
   }
 
   studentStatus.textContent = "Verifying admin access...";
+console.log("Auth state received:", user.uid);
 
   try {
     const adminSnap = await getDoc(doc(db, "admins", user.uid));
@@ -239,11 +240,11 @@ onAuthStateChanged(auth, async user => {
 
     renderStudents();
 
-  } catch (error) {
-    console.error("Student loading error:", error);
-    studentStatus.textContent =
-      "Students load nahi hue: " + error.message;
-  }
+ } catch (error) {
+  console.error("Student loading error:", error);
+  studentStatus.textContent =
+    "Error (" + error.code + "): " + error.message;
+}
 });
 </script>
 
