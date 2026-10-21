@@ -293,6 +293,12 @@ form.addEventListener("submit", async (event) => {
     await updateProfile(credential.user, {
       displayName: name
     });
+await setDoc(doc(db, "students", credential.user.uid), {
+  name: name,
+  email: email,
+  phone: phone,
+  createdAt: serverTimestamp()
+});
 
     message.style.color = "#15803d";
     message.textContent =
