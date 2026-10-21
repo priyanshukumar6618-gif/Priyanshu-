@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Students | Priyanshu Classes</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    header {
+      background: #172554;
+      color: white;
+      padding: 22px 18px;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 23px;
+    }
+
+    header p {
+      margin: 0;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: auto;
+      padding: 16px;
+    }
+
+    .panel {
+      background: white;
+      padding: 20px;
+      margin: 18px 0;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px #0000000c;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .search {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      font-size: 15px;
+    }
+
+    .student-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .student-card h3 {
+      margin: 0 0 10px;
+    }
+
+    .student-card p {
+      margin: 7px 0;
+      color: #475569;
+      font-size: 14px;
+    }
+
+    .status {
+      color: #64748b;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .back {
+      display: inline-block;
+      color: #1d4ed8;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>👨‍🎓 Manage Students</h1>
+  <p>Priyanshu Classes — Student Management</p>
+</header>
+
+<main>
+
+  <section class="panel">
+    <h2>Student Records</h2>
+
+    <p class="status">
+      Yahan registered students ki details dikhengi.
+    </p>
+
+    <input
+      type="search"
+      id="studentSearch"
+      class="search"
+      placeholder="Search by student name or email..."
+      aria-label="Search students"
+    >
+
+    <p id="studentStatus" class="status" role="status">
+      Admin access verify ho raha hai...
+    </p>
+
+    <div id="studentList"></div>
+  </section>
+
+  <p>
+    <a class="back" href="admin.html">
+      ← Back to Admin Dashboard
+    </a>
+  </p>
+
+</main>
+
+</body>
+</html>
