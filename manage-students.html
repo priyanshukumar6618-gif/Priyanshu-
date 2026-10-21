@@ -132,6 +132,120 @@
   </p>
 
 </main>
+<script type="module">
+import { initializeApp, getApps, getApp }
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8IW_3JhAhGuVvFwBUoqFKwEFEFZhDr6A",
+  authDomain: "priyanshu-24f9b.firebaseapp.com",
+  projectId: "priyanshu-24f9b",
+  storageBucket: "priyanshu-24f9b.firebasestorage.app",
+  messagingSenderId: "656305585506",
+  appId: "1:656305585506:web:e75d7a29e9add61e67803b",
+  measurementId: "G-PQPWFR9FHY"
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const studentList = document.getElementById("studentList");
+const studentStatus = document.getElementById("studentStatus");
+const studentSearch = document.getElementById("studentSearch");
+
+let students = [];
+
+function renderStudents() {
+  const query = studentSearch.value.trim().toLowerCase();
+  studentList.replaceChildren();
+
+  const filtered = students.filter(student =>
+    (student.name || "").toLowerCase().includes(query) ||
+    (student.email || "").toLowerCase().includes(query)
+  );
+
+  if (!filtered.length) {
+    studentList.textContent = students.length
+      ? "Koi matching student nahi mila."
+      : "Abhi koi student record nahi mila.";
+    return;
+  }
+
+  filtered.forEach(student => {
+    const card = document.createElement("div");
+    card.className = "student-card";
+
+    const name = document.createElement("h3");
+    name.textContent = student.name || "Name not available";
+
+    const email = document.createElement("p");
+    email.textContent = "Email: " + (student.email || "Not available");
+
+    const phone = document.createElement("p");
+    phone.textContent = "Mobile: " + (student.phone || "Not available");
+
+    const date = document.createElement("p");
+    const createdAt = student.createdAt?.toDate?.();
+    date.textContent = "Registered: " +
+      (createdAt ? createdAt.toLocaleDateString("en-IN") : "Not available");
+
+    card.append(name, email, phone, date);
+    studentList.appendChild(card);
+  });
+}
+
+studentSearch.addEventListener("input", renderStudents);
+
+onAuthStateChanged(auth, async user => {
+  if (!user) {
+    window.location.replace("login.html");
+    return;
+  }
+
+  studentStatus.textContent = "Verifying admin access...";
+
+  try {
+    const adminSnap = await getDoc(doc(db, "admins", user.uid));
+
+    if (!adminSnap.exists() || adminSnap.data().role !== "admin") {
+      studentStatus.textContent = "Access denied.";
+      await signOut(auth);
+      window.location.replace("login.html");
+      return;
+    }
+
+    studentStatus.textContent = "Admin verified. Loading students...";
+
+    const snapshot = await getDocs(collection(db, "students"));
+
+    students = snapshot.docs.map(document => document.data());
+
+    studentStatus.textContent = "Total student records: " + students.length;
+
+    renderStudents();
+
+  } catch (error) {
+    console.error("Student loading error:", error);
+    studentStatus.textContent =
+      "Students load nahi hue: " + error.message;
+  }
+});
+</script>
 
 </body>
 </html>
